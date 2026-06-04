@@ -4,504 +4,1368 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Witteler-Webdesign | Moderne Websites & Buchungssysteme</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        /* --- DESIGN SYSTEM & VARIABLEN --- */
         :root {
-            --bg-main: #0a0f1d;
-            --bg-card: #131c31;
+            --bg-main: #060b18;
+            --bg-card: #0d1525;
+            --bg-card2: #111e35;
             --accent: #3b82f6;
+            --accent2: #8b5cf6;
             --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --font: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --text-main: #f0f4ff;
+            --text-muted: #7a90b5;
+            --border: rgba(255,255,255,0.06);
+            --glow: rgba(59,130,246,0.15);
+            --font-head: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* --- RESET & BASICS --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box;
         }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            background-color: var(--bg-main);
+            background: var(--bg-main);
             color: var(--text-main);
-            font-family: var(--font);
+            font-family: var(--font-body);
             overflow-x: hidden;
-            line-height: 1.6;
+            line-height: 1.65;
         }
 
-        /* --- REUSABLE COMPONENTS --- */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
+        /* ---- SCROLLBAR ---- */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+        /* ---- NOISE OVERLAY ---- */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.022;
+            pointer-events: none;
+            z-index: 9999;
         }
 
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+
+        /* ---- BUTTONS ---- */
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px 28px;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            font-size: 1rem;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 28px; border-radius: 50px; font-weight: 600;
+            text-decoration: none; cursor: pointer; border: none;
+            font-size: 0.95rem; font-family: var(--font-body);
+            transition: all 0.35s var(--ease); letter-spacing: 0.01em;
         }
-
         .btn-primary {
             background: var(--accent-gradient);
-            color: white;
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+            color: #fff;
+            box-shadow: 0 4px 24px rgba(59,130,246,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
         }
-
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.6);
+            box-shadow: 0 8px 36px rgba(59,130,246,0.55), inset 0 1px 0 rgba(255,255,255,0.15);
         }
-
         .btn-secondary {
-            background: transparent;
+            background: rgba(255,255,255,0.04);
             color: var(--text-main);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(8px);
+        }
+        .btn-secondary:hover {
+            background: rgba(59,130,246,0.1);
+            border-color: rgba(59,130,246,0.4);
+            transform: translateY(-3px);
         }
 
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--accent);
-            transform: translateY(-3px);
+        /* ---- SECTION TITLE ---- */
+        .section-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: rgba(59,130,246,0.1);
+            padding: 5px 14px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(59,130,246,0.2);
         }
 
         .section-title {
+            font-family: var(--font-head);
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 50px;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            margin-bottom: 16px;
             font-weight: 800;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
         }
-
         .section-title span {
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 560px;
+            margin: 0 auto 64px auto;
+        }
 
-        /* --- ANIMATION HELPERS (Scroll-triggered) --- */
+        /* ---- REVEAL ---- */
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            transform: translateY(36px);
+            transition: opacity 0.75s var(--ease), transform 0.75s var(--ease);
         }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
 
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* --- NAVIGATION --- */
+        /* ===== HEADER ===== */
         header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            background: rgba(10, 15, 29, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: var(--transition);
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            transition: all 0.4s var(--ease);
+        }
+        header.scrolled {
+            background: rgba(6,11,24,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
         }
 
         nav {
-            height: 80px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            height: 76px;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-family: var(--font-head);
+            font-size: 1.35rem;
             font-weight: 800;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.03em;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-decoration: none;
         }
 
         .nav-links {
-            display: flex;
-            gap: 32px;
-            list-style: none;
+            display: flex; gap: 36px; list-style: none;
         }
-
         .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
-            transition: var(--transition);
+            color: var(--text-muted); text-decoration: none;
+            font-weight: 500; font-size: 0.9rem;
+            transition: color 0.2s; position: relative; padding-bottom: 2px;
         }
-
-        .nav-links a:hover {
-            color: var(--text-main);
+        .nav-links a::after {
+            content: '';
+            position: absolute; bottom: -2px; left: 0; width: 0; height: 1.5px;
+            background: var(--accent-gradient);
+            transition: width 0.3s var(--ease);
+            border-radius: 2px;
         }
+        .nav-links a:hover { color: var(--text-main); }
+        .nav-links a:hover::after { width: 100%; }
 
-        /* --- HERO SECTION --- */
+        /* Burger Menu */
+        .burger {
+            display: none;
+            flex-direction: column; gap: 5px; cursor: pointer;
+            padding: 4px; background: none; border: none;
+        }
+        .burger span {
+            width: 22px; height: 2px;
+            background: var(--text-main); border-radius: 2px;
+            transition: all 0.3s var(--ease);
+        }
+        .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .burger.open span:nth-child(2) { opacity: 0; }
+        .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        .mobile-menu {
+            display: none;
+            position: fixed; top: 76px; left: 0; width: 100%;
+            background: rgba(6,11,24,0.97); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 24px 28px 32px;
+            flex-direction: column; gap: 0;
+            z-index: 999;
+        }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a {
+            color: var(--text-main); text-decoration: none;
+            font-size: 1.1rem; font-weight: 500;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .mobile-menu a:last-of-type { border: none; margin-top: 16px; }
+
+        /* ===== HERO ===== */
         #home {
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding-top: 100px;
-            position: relative;
+            display: flex; align-items: center;
+            padding-top: 76px; position: relative; overflow: hidden;
+        }
+
+        /* Animated background grid */
+        .hero-grid {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+        }
+
+        /* Floating orbs */
+        .orb {
+            position: absolute; border-radius: 50%;
+            filter: blur(80px); pointer-events: none;
+        }
+        .orb-1 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%);
+            top: -100px; right: -100px;
+            animation: orbFloat 12s ease-in-out infinite;
+        }
+        .orb-2 {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
+            bottom: 0; left: -80px;
+            animation: orbFloat 16s ease-in-out infinite reverse;
+        }
+        @keyframes orbFloat {
+            0%,100% { transform: translate(0,0); }
+            50% { transform: translate(30px, -30px); }
         }
 
         .hero-wrapper {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
+            gap: 64px; align-items: center;
+            position: relative; z-index: 1;
+            padding: 80px 0;
+        }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(59,130,246,0.08);
+            border: 1px solid rgba(59,130,246,0.2);
+            border-radius: 50px; padding: 6px 16px 6px 8px;
+            font-size: 0.82rem; font-weight: 500; color: #93c5fd;
+            margin-bottom: 24px;
+        }
+        .hero-badge-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: #3b82f6;
+            box-shadow: 0 0 8px #3b82f6;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%,100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
         }
 
         .hero-text h1 {
-            font-size: 3.5rem;
-            line-height: 1.1;
-            font-weight: 800;
+            font-family: var(--font-head);
+            font-size: clamp(2.8rem, 5vw, 4rem);
+            line-height: 1.08; font-weight: 800;
             margin-bottom: 24px;
-            letter-spacing: -1px;
+            letter-spacing: -0.04em;
+        }
+        .hero-text h1 span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero-text p {
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            margin-bottom: 40px;
-            max-width: 500px;
+            color: var(--text-muted); font-size: 1.1rem;
+            margin-bottom: 40px; max-width: 480px; line-height: 1.7;
         }
 
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
-        }
+        .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
 
-        .hero-image-container {
+        .hero-trust {
+            margin-top: 40px; padding-top: 32px;
+            border-top: 1px solid var(--border);
+            display: flex; gap: 32px;
+        }
+        .trust-item { display: flex; flex-direction: column; gap: 2px; }
+        .trust-number {
+            font-family: var(--font-head);
+            font-size: 1.6rem; font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .trust-label { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+        .hero-visual {
             position: relative;
         }
-
-        .hero-img {
-            width: 100%;
-            height: auto;
+        .hero-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            animation: float 6s ease-in-out infinite;
+            padding: 32px;
+            animation: float 7s ease-in-out infinite;
         }
-
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        .hero-card-header {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
+        }
+        .hero-card-dots { display: flex; gap: 6px; }
+        .hero-card-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-r { background: #ff5f57; }
+        .dot-y { background: #febc2e; }
+        .dot-g { background: #28c840; }
+        .hero-card-title { font-size: 0.82rem; color: var(--text-muted); }
+
+        .mock-browser {
+            background: var(--bg-main);
+            border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
+        }
+        .mock-url-bar {
+            background: rgba(255,255,255,0.03);
+            padding: 10px 16px;
+            display: flex; align-items: center; gap: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .mock-url-text { font-size: 0.75rem; color: var(--text-muted); font-family: monospace; }
+        .mock-url-dot { width: 6px; height: 6px; border-radius: 50%; background: #28c840; }
+        .mock-content {
+            padding: 20px;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .mock-bar {
+            height: 10px; border-radius: 4px;
+            background: rgba(255,255,255,0.06);
+        }
+        .mock-bar.accent { background: var(--accent-gradient); width: 60%; }
+        .mock-bar.short { width: 40%; }
+        .mock-bar.med { width: 75%; }
+        .mock-row { display: flex; gap: 10px; margin-top: 8px; }
+        .mock-btn-sim {
+            height: 32px; border-radius: 20px; flex: 1;
+            background: var(--accent-gradient);
+        }
+        .mock-btn-sim2 {
+            height: 32px; border-radius: 20px; flex: 1;
+            background: rgba(255,255,255,0.06);
         }
 
-        /* --- SERVICES (LEISTUNGEN) --- */
-        #services {
-            padding: 120px 0;
-            background: rgba(255,255,255,0.01);
+        .floating-pill {
+            position: absolute;
+            background: var(--bg-card2);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 10px 18px;
+            display: flex; align-items: center; gap: 10px;
+            font-size: 0.82rem; font-weight: 500;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
+        .pill-icon { font-size: 1rem; }
+        .pill-1 {
+            bottom: -16px; left: -20px;
+            animation: floatPill 5s ease-in-out infinite;
+        }
+        .pill-2 {
+            top: -16px; right: -20px;
+            animation: floatPill 5s ease-in-out infinite 2.5s;
+        }
+        @keyframes floatPill {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* ===== SERVICES ===== */
+        #services { padding: 130px 0; }
 
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 32px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
         }
 
         .service-card {
             background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            padding: 40px;
+            border: 1px solid var(--border);
+            padding: 36px 32px;
             border-radius: 20px;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
+            transition: all 0.4s var(--ease);
+            position: relative; overflow: hidden;
+            cursor: default;
         }
-
-        .service-card::before {
+        .service-card::after {
             content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 2px;
             background: var(--accent-gradient);
-            opacity: 0;
-            transition: var(--transition);
-            z-index: 1;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s var(--ease);
         }
-
-        .service-card:hover::before {
-            opacity: 0.03;
-        }
-
         .service-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(59, 130, 246, 0.3);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transform: translateY(-6px);
+            border-color: rgba(59,130,246,0.25);
+            background: var(--bg-card2);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.25), 0 0 0 1px rgba(59,130,246,0.1);
         }
+        .service-card:hover::after { transform: scaleX(1); }
 
-        .service-icon-wrapper {
+        .service-icon {
+            width: 52px; height: 52px;
+            background: rgba(59,130,246,0.1);
+            border: 1px solid rgba(59,130,246,0.2);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
             margin-bottom: 24px;
-            height: 60px;
+            font-size: 1.4rem;
+            transition: all 0.3s var(--ease);
         }
-
-        .service-icon-wrapper img {
-            height: 100%;
-            object-fit: contain;
+        .service-card:hover .service-icon {
+            background: rgba(59,130,246,0.2);
+            transform: scale(1.05);
         }
 
         .service-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 16px;
-            font-weight: 700;
+            font-family: var(--font-head);
+            font-size: 1.2rem; margin-bottom: 12px; font-weight: 700;
         }
+        .service-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.65; }
 
-        .service-card p {
-            color: var(--text-muted);
-        }
-
-        /* --- SPEZIAL-FEATURE (BUCHUNGSSYSTEM) --- */
+        /* ===== BOOKING FEATURE ===== */
         #booking-feature {
             padding: 100px 0;
-            background: radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            position: relative;
+        }
+        #booking-feature::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 60% 60% at 80% 50%, rgba(139,92,246,0.12) 0%, transparent 60%);
+            pointer-events: none;
         }
 
         .feature-box {
-            background: linear-gradient(135deg, rgba(19, 28, 49, 0.9) 0%, rgba(10, 15, 29, 0.9) 100%);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 32px;
-            padding: 60px;
+            background: linear-gradient(135deg, rgba(13,21,37,0.95) 0%, rgba(6,11,24,0.98) 100%);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 64px;
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 40px;
-            align-items: center;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 48px; align-items: center;
+            position: relative; z-index: 1;
+            overflow: hidden;
+        }
+        .feature-box::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59,130,246,0.4), transparent);
         }
 
         .feature-badge {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--accent);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
             display: inline-block;
+            background: rgba(59,130,246,0.1);
+            color: var(--accent);
+            padding: 5px 14px; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.1em;
             margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            border: 1px solid rgba(59,130,246,0.2);
         }
 
-        .feature-showcase img {
-            width: 100%;
-            border-radius: 16px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        .feature-text h2 {
+            font-family: var(--font-head);
+            font-size: clamp(1.7rem, 3vw, 2.4rem);
+            font-weight: 800; margin-bottom: 20px;
+            letter-spacing: -0.03em; line-height: 1.2;
         }
 
-        /* --- CALL TO ACTION (KONTAKT-TRIGGER) --- */
-        #cta {
-            padding: 120px 0;
-            text-align: center;
+        .feature-list {
+            list-style: none; margin: 20px 0 32px 0;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .feature-list li {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 0.95rem; color: var(--text-muted);
+        }
+        .feature-check {
+            width: 20px; height: 20px; border-radius: 50%;
+            background: rgba(59,130,246,0.15);
+            border: 1px solid rgba(59,130,246,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.65rem; color: #60a5fa; flex-shrink: 0;
+        }
+
+        .feature-showcase {
             position: relative;
         }
-
-        .cta-content {
-            max-width: 700px;
-            margin: 0 auto;
+        .booking-mock {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 20px; overflow: hidden;
+        }
+        .booking-mock-header {
+            background: var(--bg-card); padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem; font-weight: 600;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .booking-mock-body { padding: 20px; }
+        .booking-time-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;
+        }
+        .time-slot {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 8px; padding: 8px; text-align: center;
+            font-size: 0.78rem; color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .time-slot.selected {
+            background: rgba(59,130,246,0.15);
+            border-color: rgba(59,130,246,0.4);
+            color: #93c5fd;
+        }
+        .booking-confirm {
+            background: var(--accent-gradient);
+            border-radius: 8px; padding: 12px;
+            text-align: center; font-size: 0.85rem; font-weight: 600;
         }
 
-        .cta-content h2 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 24px;
+        /* ===== STATS ===== */
+        #stats { padding: 80px 0; }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+            background: var(--border); border-radius: 20px; overflow: hidden;
+        }
+        .stat-item {
+            background: var(--bg-main);
+            padding: 40px 32px; text-align: center;
+        }
+        .stat-number {
+            font-family: var(--font-head);
+            font-size: 2.8rem; font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1; margin-bottom: 8px;
+        }
+        .stat-label { color: var(--text-muted); font-size: 0.88rem; }
+
+        /* ===== CTA ===== */
+        #cta {
+            padding: 130px 0;
+            position: relative; overflow: hidden;
+        }
+        #cta::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(59,130,246,0.08) 0%, transparent 70%);
+        }
+        .cta-box {
+            position: relative; z-index: 1;
+            max-width: 720px; margin: 0 auto; text-align: center;
+        }
+        .cta-box h2 {
+            font-family: var(--font-head);
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            font-weight: 800; margin-bottom: 20px;
+            letter-spacing: -0.04em; line-height: 1.1;
+        }
+        .cta-box p {
+            color: var(--text-muted); font-size: 1.1rem;
+            margin-bottom: 40px; line-height: 1.7;
+        }
+        .cta-btn-wrap { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn-pulse {
+            position: relative;
+        }
+        .btn-pulse::before {
+            content: '';
+            position: absolute; inset: -3px;
+            border-radius: 53px;
+            background: var(--accent-gradient);
+            opacity: 0;
+            animation: btnPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes btnPulse {
+            0%,100% { opacity: 0; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(1.06); }
         }
 
-        /* --- FOOTER & IMPRESSUM --- */
+        /* ===== FOOTER ===== */
         footer {
-            background: #060a14;
-            padding: 60px 0 30px 0;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            font-size: 0.95rem;
+            background: #030710;
+            padding: 64px 0 32px;
+            border-top: 1px solid var(--border);
         }
-
         .footer-grid {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
+            gap: 48px; margin-bottom: 48px;
         }
-
-        .footer-logo h3 {
-            font-size: 1.3rem;
-            margin-bottom: 16px;
-        }
-
-        .footer-logo p {
-            color: var(--text-muted);
-            max-width: 300px;
-        }
+        .footer-logo-wrap { margin-bottom: 14px; }
+        .footer-desc { color: var(--text-muted); font-size: 0.9rem; max-width: 280px; line-height: 1.7; margin-bottom: 24px; }
 
         .footer-col h4 {
+            font-family: var(--font-head);
+            font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--text-main);
             margin-bottom: 20px;
-            font-weight: 600;
-            color: var(--text-main);
         }
-
-        .footer-col p {
-            color: var(--text-muted);
-            margin-bottom: 8px;
+        .footer-col a, .footer-col p {
+            display: block; color: var(--text-muted);
+            text-decoration: none; font-size: 0.9rem;
+            margin-bottom: 10px; transition: color 0.2s;
         }
+        .footer-col a:hover { color: #93c5fd; }
 
         .footer-bottom {
-            padding-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-muted);
-            font-size: 0.85rem;
+            padding-top: 28px;
+            border-top: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            color: var(--text-muted); font-size: 0.82rem;
+        }
+        .footer-bottom-links { display: flex; gap: 24px; }
+        .footer-bottom-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .footer-bottom-links a:hover { color: var(--text-main); }
+
+        /* ===== PRICING ===== */
+        #pricing { padding: 130px 0; }
+
+        .pricing-intro {
+            text-align: center; margin-bottom: 56px;
         }
 
-        /* --- RESPONSIVE DESIGN (MOBILOPTIMIERUNG) --- */
+        .pricing-card-wrap {
+            max-width: 700px; margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(59,130,246,0.2);
+            border-radius: 28px; overflow: hidden;
+            box-shadow: 0 0 0 1px rgba(59,130,246,0.05), 0 24px 64px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .pricing-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: var(--accent-gradient);
+        }
+
+        .pricing-top {
+            padding: 40px 44px 32px;
+            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: flex-start;
+            flex-wrap: wrap; gap: 24px;
+        }
+
+        .pricing-title {
+            font-family: var(--font-head); font-size: 1.4rem; font-weight: 800;
+            margin-bottom: 8px; letter-spacing: -0.02em;
+        }
+        .pricing-desc {
+            color: var(--text-muted); font-size: 0.9rem; max-width: 320px; line-height: 1.6;
+        }
+
+        .pricing-options {
+            display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
+        }
+
+        .price-option {
+            background: var(--bg-card2);
+            border: 1px solid var(--border);
+            border-radius: 14px; padding: 14px 20px;
+            text-align: right; min-width: 180px;
+            cursor: pointer; transition: all 0.25s var(--ease);
+            position: relative;
+        }
+        .price-option:hover, .price-option.selected {
+            border-color: rgba(59,130,246,0.4);
+            background: rgba(59,130,246,0.07);
+        }
+        .price-option.selected::after {
+            content: '✓';
+            position: absolute; top: 10px; right: 10px;
+            width: 18px; height: 18px; border-radius: 50%;
+            background: var(--accent-gradient);
+            color: #fff; font-size: 0.65rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .price-amount {
+            font-family: var(--font-head); font-size: 1.6rem; font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+        .price-suffix {
+            font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;
+        }
+        .price-tag {
+            display: inline-block; font-size: 0.68rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.08em;
+            padding: 2px 8px; border-radius: 20px; margin-bottom: 6px;
+            background: rgba(59,130,246,0.1); color: #60a5fa;
+            border: 1px solid rgba(59,130,246,0.2);
+        }
+        .price-tag.green {
+            background: rgba(34,197,94,0.1); color: #4ade80;
+            border-color: rgba(34,197,94,0.2);
+        }
+
+        .pricing-features {
+            padding: 32px 44px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px 32px;
+        }
+        .pricing-feature {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 0.88rem; color: var(--text-muted);
+        }
+        .pf-check {
+            width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+            background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.6rem; color: #60a5fa;
+        }
+
+        .pricing-bottom {
+            padding: 24px 44px 36px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .pricing-note {
+            font-size: 0.82rem; color: var(--text-muted);
+        }
+        .pricing-note strong { color: var(--text-main); }
+
+        @media (max-width: 640px) {
+            .pricing-top { flex-direction: column; }
+            .pricing-options { align-items: stretch; }
+            .price-option { text-align: left; }
+            .pricing-features { grid-template-columns: 1fr; }
+            .pricing-top, .pricing-features, .pricing-bottom { padding-left: 28px; padding-right: 28px; }
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; z-index: 9000;
+            background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+            align-items: center; justify-content: center; padding: 24px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px; padding: 40px 44px;
+            max-width: 640px; width: 100%;
+            max-height: 85vh; overflow-y: auto;
+            position: relative;
+            scrollbar-width: thin; scrollbar-color: var(--accent) transparent;
+        }
+        .modal-box::-webkit-scrollbar { width: 4px; }
+        .modal-box::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+        .modal-close {
+            position: absolute; top: 18px; right: 20px;
+            background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+            color: var(--text-muted); border-radius: 50%;
+            width: 32px; height: 32px; font-size: 1rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.12); color: var(--text-main); }
+        .modal-box h2 {
+            font-family: var(--font-head); font-size: 1.5rem; font-weight: 800;
+            margin-bottom: 24px; letter-spacing: -0.02em;
+        }
+        .modal-box h3 {
+            font-family: var(--font-head); font-size: 1rem; font-weight: 700;
+            margin: 24px 0 8px; color: var(--text-main);
+        }
+        .modal-box p, .modal-box li {
+            color: var(--text-muted); font-size: 0.9rem; line-height: 1.75;
+        }
+        .modal-box a { color: #93c5fd; text-decoration: none; }
+        .modal-box a:hover { text-decoration: underline; }
+        .modal-box ul { padding-left: 20px; margin-top: 6px; }
+        .modal-tabs {
+            display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap;
+        }
+        .modal-tab {
+            padding: 7px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;
+            cursor: pointer; border: 1px solid var(--border);
+            background: transparent; color: var(--text-muted);
+            transition: all 0.2s; font-family: var(--font-body);
+        }
+        .modal-tab.active {
+            background: rgba(59,130,246,0.15); border-color: rgba(59,130,246,0.4); color: #93c5fd;
+        }
+        .modal-panel { display: none; }
+        .modal-panel.active { display: block; }
+        .modal-highlight {
+            background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15);
+            border-radius: 10px; padding: 14px 18px; margin: 12px 0;
+        }
+        .modal-highlight p { color: var(--text-main); font-size: 0.88rem; }
+
+        /* ===== PROCESS SECTION ===== */
+        #process { padding: 130px 0; position: relative; overflow: hidden; }
+        #process::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 50% 60% at 20% 50%, rgba(59,130,246,0.07) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .process-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.6fr;
+            gap: 80px; align-items: center;
+        }
+
+        .process-left h2 {
+            font-family: var(--font-head);
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            font-weight: 800; letter-spacing: -0.04em;
+            line-height: 1.15; margin-bottom: 20px;
+        }
+        .process-left p {
+            color: var(--text-muted); font-size: 1rem; line-height: 1.7; margin-bottom: 32px;
+        }
+
+        .process-steps {
+            display: flex; flex-direction: column; gap: 0;
+            position: relative;
+        }
+        /* Vertical connecting line */
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            left: 21px; top: 44px; bottom: 44px;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(59,130,246,0.5), rgba(139,92,246,0.5));
+        }
+
+        .process-step {
+            display: flex; gap: 20px; align-items: flex-start;
+            padding: 18px 0; position: relative; cursor: default;
+        }
+
+        .step-num-wrap {
+            flex-shrink: 0; position: relative; z-index: 1;
+        }
+        .step-num {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid rgba(59,130,246,0.25);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-head); font-size: 0.9rem; font-weight: 800;
+            color: var(--accent);
+            transition: all 0.35s var(--ease);
+        }
+        .process-step:hover .step-num,
+        .process-step.active .step-num {
+            background: var(--accent-gradient);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(59,130,246,0.4);
+        }
+
+        .step-body {
+            padding-top: 10px; flex: 1;
+        }
+        .step-body h4 {
+            font-family: var(--font-head);
+            font-size: 1.05rem; font-weight: 700;
+            margin-bottom: 4px; transition: color 0.2s;
+        }
+        .process-step:hover .step-body h4,
+        .process-step.active .step-body h4 { color: #93c5fd; }
+        .step-body p {
+            color: var(--text-muted); font-size: 0.88rem; line-height: 1.6;
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s var(--ease), opacity 0.3s;
+            opacity: 0;
+        }
+        .process-step:hover .step-body p,
+        .process-step.active .step-body p {
+            max-height: 100px; opacity: 1;
+        }
+
+        .step-tag {
+            display: inline-block; font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            padding: 2px 10px; border-radius: 20px; margin-bottom: 6px;
+            background: rgba(59,130,246,0.1); color: #60a5fa;
+            border: 1px solid rgba(59,130,246,0.2);
+        }
+
         @media (max-width: 968px) {
+            .process-wrapper { grid-template-columns: 1fr; gap: 48px; }
+            .process-steps::before { display: none; }
+        }
+
+        /* ===== COOKIE CONSENT ===== */
+        .consent-overlay {
+            display: none; position: fixed; inset: 0; z-index: 10000;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            align-items: flex-end; justify-content: center;
+            padding: 24px;
+        }
+        .consent-overlay.show { display: flex; }
+        .consent-box {
+            background: var(--bg-card2);
+            border: 1px solid var(--border);
+            border-radius: 20px; padding: 28px 32px;
+            max-width: 680px; width: 100%;
+            box-shadow: 0 -8px 48px rgba(0,0,0,0.4);
+            animation: slideUp 0.4s var(--ease);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .consent-top {
+            display: flex; align-items: flex-start; gap: 16px; margin-bottom: 18px;
+        }
+        .consent-icon {
+            font-size: 1.6rem; flex-shrink: 0; margin-top: 2px;
+        }
+        .consent-box h3 {
+            font-family: var(--font-head); font-size: 1.05rem; font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .consent-box p {
+            color: var(--text-muted); font-size: 0.85rem; line-height: 1.65;
+        }
+        .consent-box p a {
+            color: #93c5fd; text-decoration: none;
+        }
+        .consent-box p a:hover { text-decoration: underline; }
+        .consent-buttons {
+            display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;
+        }
+        .consent-btn-reject {
+            padding: 10px 22px; border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+            cursor: pointer; border: 1px solid var(--border);
+            background: transparent; color: var(--text-muted);
+            font-family: var(--font-body); transition: all 0.2s;
+        }
+        .consent-btn-reject:hover { border-color: rgba(255,255,255,0.2); color: var(--text-main); }
+        .consent-btn-accept {
+            padding: 10px 24px; border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+            cursor: pointer; border: none;
+            background: var(--accent-gradient); color: #fff;
+            font-family: var(--font-body);
+            box-shadow: 0 4px 16px rgba(59,130,246,0.35);
+            transition: all 0.25s;
+        }
+        .consent-btn-accept:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(59,130,246,0.5); }
+
+        /* Rejected-Banner (schmaler Hinweis oben) */
+        .consent-rejected-bar {
+            display: none; position: fixed; top: 76px; left: 0; width: 100%; z-index: 9500;
+            background: rgba(15,23,42,0.95); border-bottom: 1px solid rgba(248,113,113,0.2);
+            backdrop-filter: blur(8px);
+            padding: 10px 28px;
+            align-items: center; justify-content: space-between; gap: 12px;
+            font-size: 0.8rem; color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+        .consent-rejected-bar.show { display: flex; }
+        .consent-rejected-bar a {
+            color: #93c5fd; cursor: pointer; text-decoration: none; white-space: nowrap;
+        }
+        .consent-rejected-bar a:hover { text-decoration: underline; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 968px) {
+            .nav-links { display: none; }
+            .burger { display: flex; }
             .hero-wrapper {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 40px;
+                grid-template-columns: 1fr; text-align: center; gap: 48px; padding: 64px 0;
             }
-            .hero-text h1 {
-                font-size: 2.8rem;
-            }
-            .hero-text p {
-                margin: 0 auto 40px auto;
-            }
-            .hero-buttons {
-                justify-content: center;
-            }
-            .feature-box {
-                grid-template-columns: 1fr;
-                padding: 40px;
-            }
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            .nav-links {
-                display: none; /* Für ein echtes Kundenprojekt könnte hier ein Burger-Menü hin */
-            }
+            .hero-text p { margin: 0 auto 36px auto; }
+            .hero-buttons { justify-content: center; }
+            .hero-trust { justify-content: center; }
+            .pill-1, .pill-2 { display: none; }
+            .services-grid { grid-template-columns: 1fr; }
+            .feature-box { grid-template-columns: 1fr; padding: 40px 32px; gap: 32px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+        }
+        @media (max-width: 600px) {
+            .hero-trust { flex-direction: column; gap: 20px; align-items: center; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <header>
+    <!-- HEADER -->
+    <header id="header">
         <div class="container">
             <nav>
-                <div class="logo">Witteler-Webdesign</div>
+                <a href="#home" class="logo">Witteler-Webdesign</a>
                 <ul class="nav-links">
                     <li><a href="#home">Start</a></li>
                     <li><a href="#services">Leistungen</a></li>
                     <li><a href="#booking-feature">Vorteile</a></li>
                     <li><a href="#cta">Kontakt</a></li>
                 </ul>
-                <a href="HIER_DEIN_CAL_COM_LINK_EINTRAGEN" class="btn btn-secondary" target="_blank">Termin buchen</a>
+                <a href="https://cal.com/julian-witteler-xdzypp/gesprach-vereinbarn" class="btn btn-secondary" target="_blank" style="display:none;" id="nav-cta-desktop">Termin buchen</a>
+                <button class="burger" id="burger" aria-label="Menü">
+                    <span></span><span></span><span></span>
+                </button>
             </nav>
         </div>
     </header>
 
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#home" onclick="closeMenu()">Start</a>
+        <a href="#services" onclick="closeMenu()">Leistungen</a>
+        <a href="#booking-feature" onclick="closeMenu()">Vorteile</a>
+        <a href="#cta" onclick="closeMenu()">Kontakt</a>
+        <a href="https://cal.com/julian-witteler-xdzypp/gesprach-vereinbarn" class="btn btn-primary" target="_blank" style="text-align:center;">Jetzt Erstgespräch sichern</a>
+    </div>
+
+    <!-- HERO -->
     <section id="home">
+        <div class="hero-grid"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
         <div class="container">
             <div class="hero-wrapper">
                 <div class="hero-text">
-                    <h1>Moderne Websites die <br><span>Kunden konvertieren</span></h1>
-                    <p>Ich entwickle maßgeschneiderte Web-Lösungen für kleine Betriebe und Salons. Inklusive vollautomatischer Online-Terminbuchung für mehr Umsatz und weniger Telefonstress.</p>
+                    <div class="hero-badge">
+                        <div class="hero-badge-dot"></div>
+                        Verfügbar für neue Projekte
+                    </div>
+                    <h1>Moderne Websites die <span>Kunden konvertieren</span></h1>
+                    <p>Maßgeschneiderte Web-Lösungen für kleine Betriebe und Salons — inklusive vollautomatischer Online-Terminbuchung für mehr Umsatz und weniger Telefonstress.</p>
                     <div class="hero-buttons">
-                        <a href="HIER_DEIN_CAL_COM_LINK_EINTRAGEN" class="btn btn-primary" target="_blank">Jetzt Erstgespräch sichern</a>
-                        <a href="#services" class="btn btn-secondary">Mehr erfahren</a>
+                        <a href="https://cal.com/julian-witteler-xdzypp/gesprach-vereinbarn" class="btn btn-primary" target="_blank">Erstgespräch sichern</a>
+                        <a href="#services" class="btn btn-secondary">Leistungen ansehen</a>
+                    </div>
+                    <div class="hero-trust">
+                        <div class="trust-item">
+                            <span class="trust-number">24/7</span>
+                            <span class="trust-label">Online-Buchung</span>
+                        </div>
+                        <div class="trust-item">
+                            <span class="trust-number">100%</span>
+                            <span class="trust-label">Handgeschrieben</span>
+                        </div>
+                        <div class="trust-item">
+                            <span class="trust-number">1–2</span>
+                            <span class="trust-label">Wochen bis Live</span>
+                        </div>
                     </div>
                 </div>
-                <div class="hero-image-container">
-                    <img src="hero_workspace.png" alt="Moderner Arbeitsplatz Webentwicklung" class="hero-img">
+                <div class="hero-visual">
+                    <div class="hero-card">
+                        <div class="hero-card-header">
+                            <div class="hero-card-dots">
+                                <div class="hero-card-dot dot-r"></div>
+                                <div class="hero-card-dot dot-y"></div>
+                                <div class="hero-card-dot dot-g"></div>
+                            </div>
+                            <span class="hero-card-title">dein-salon.de</span>
+                        </div>
+                        <div class="mock-browser">
+                            <div class="mock-url-bar">
+                                <div class="mock-url-dot"></div>
+                                <span class="mock-url-text">https://dein-salon.de</span>
+                            </div>
+                            <div class="mock-content">
+                                <div class="mock-bar accent"></div>
+                                <div class="mock-bar med"></div>
+                                <div class="mock-bar short"></div>
+                                <div class="mock-bar" style="width:88%;margin-top:4px;"></div>
+                                <div class="mock-row">
+                                    <div class="mock-btn-sim"></div>
+                                    <div class="mock-btn-sim2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="floating-pill pill-1">
+                        <span class="pill-icon">📅</span>
+                        Termin gebucht!
+                    </div>
+                    <div class="floating-pill pill-2">
+                        <span class="pill-icon">⚡</span>
+                        Live in 7 Tagen
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- LEISTUNGEN -->
     <section id="services">
         <div class="container">
+            <div style="text-align:center;">
+                <div class="section-label reveal">Was ich anbiete</div>
+            </div>
             <h2 class="section-title reveal">Meine <span>Leistungen</span></h2>
+            <p class="section-subtitle reveal">Alles aus einer Hand — von der ersten Idee bis zum fertigen Auftritt, der Kunden bringt.</p>
             <div class="services-grid">
-                
-                <div class="service-card reveal">
-                    <div class="service-icon-wrapper">
-                        <img src="service_icons.png" alt="Webdesign Icon">
-                    </div>
+                <div class="service-card reveal reveal-delay-1">
+                    <div class="service-icon">🎨</div>
                     <h3>High-End Webdesign</h3>
-                    <p>Individuelle Designs, perfekt abgestimmt auf dein Handwerk oder deinen Salon. Keine starren Baukästen, sondern Code, der performt.</p>
+                    <p>Individuelle Designs, perfekt abgestimmt auf dein Handwerk oder deinen Salon. Keine starren Baukästen, sondern Code, der wirklich performt.</p>
                 </div>
-
-                <div class="service-card reveal">
-                    <div class="service-icon-wrapper">
-                        <img src="service_icons.png" alt="Booking Icon">
-                    </div>
+                <div class="service-card reveal reveal-delay-2">
+                    <div class="service-icon">📆</div>
                     <h3>Smartes Buchungssystem</h3>
                     <p>Deine Kunden buchen 24/7 direkt auf deiner Seite. Synchronisiert mit deinem Kalender, inklusive automatischer Erinnerungen.</p>
                 </div>
-
-                <div class="service-card reveal">
-                    <div class="service-icon-wrapper">
-                        <img src="service_icons.png" alt="Mobile Responsive Icon">
-                    </div>
+                <div class="service-card reveal reveal-delay-3">
+                    <div class="service-icon">📱</div>
                     <h3>Responsive & Schnell</h3>
-                    <p>Über 70% der Salon-Kunden buchen übers Smartphone. Deine neue Website lädt blitzschnell und sieht auf jedem Handy perfekt aus.</p>
+                    <p>Über 70% der Salon-Kunden buchen übers Smartphone. Deine Website lädt blitzschnell und sieht auf jedem Gerät perfekt aus.</p>
                 </div>
-
             </div>
         </div>
     </section>
 
+    <!-- BOOKING FEATURE -->
     <section id="booking-feature">
         <div class="container">
             <div class="feature-box reveal">
                 <div class="feature-text">
-                    <span class="feature-badge">Umsatz-Booster</span>
+                    <div class="feature-badge">Umsatz-Booster</div>
                     <h2>Nie wieder Termine am Telefon verlieren</h2>
-                    <p style="color: var(--text-muted); margin-bottom: 24px;">Während du dich um deine Kunden kümmerst, füllt sich dein Terminkalender von ganz allein. Ein integriertes Online-Buchungssystem sorgt für spürbar weniger Ausfälle und maximale Auslastung.</p>
-                    <a href="HIER_DEIN_CAL_COM_LINK_EINTRAGEN" class="btn btn-primary" target="_blank">Live-Demo ansehen</a>
+                    <p style="color:var(--text-muted); font-size:1rem; line-height:1.7; margin-bottom:4px;">Während du dich um deine Kunden kümmerst, füllt sich dein Terminkalender von ganz allein.</p>
+                    <ul class="feature-list">
+                        <li><span class="feature-check">✓</span> Automatische Kalender-Synchronisation</li>
+                        <li><span class="feature-check">✓</span> Automatische E-Mail-Erinnerungen gegen No-Shows</li>
+                        <li><span class="feature-check">✓</span> Buchungen rund um die Uhr — auch nachts</li>
+                        <li><span class="feature-check">✓</span> Einbindung in deine bestehende Website</li>
+                    </ul>
+                    <a href="https://cal.com/julian-witteler-xdzypp/gesprach-vereinbarn" class="btn btn-primary" target="_blank">Live-Demo ansehen</a>
                 </div>
                 <div class="feature-showcase">
-                    <img src="gallery1.png" alt="Vorschau des Buchungssystems">
+                    <div class="booking-mock">
+                        <div class="booking-mock-header">
+                            <span>Online Terminbuchung</span>
+                            <span style="color:#28c840; font-size:0.78rem;">● Live</span>
+                        </div>
+                        <div class="booking-mock-body">
+                            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Wähle einen Termin:</p>
+                            <div class="booking-time-grid">
+                                <div class="time-slot">9:00</div>
+                                <div class="time-slot selected">10:30</div>
+                                <div class="time-slot">11:00</div>
+                                <div class="time-slot">13:00</div>
+                                <div class="time-slot">14:30</div>
+                                <div class="time-slot">16:00</div>
+                            </div>
+                            <div class="booking-confirm">Termin bestätigen →</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="cta">
+    <!-- STATS -->
+    <section id="stats">
         <div class="container">
-            <div class="cta-content reveal">
-                <h2>Bereit für digitale Neukunden?</h2>
-                <p style="color: var(--text-muted); margin-bottom: 40px; font-size: 1.2rem;">Lass uns in einem kurzen, unverbindlichen Gespräch analysieren, wie wir auch deinen Betrieb digital ganz nach vorne bringen.</p>
-                <a href="HIER_DEIN_CAL_COM_LINK_EINTRAGEN" class="btn btn-primary" style="padding: 18px 40px; font-size: 1.1rem;" target="_blank">⚡ Kostenloses Erstgespräch buchen</a>
+            <div class="stats-grid reveal">
+                <div class="stat-item">
+                    <div class="stat-number">70%</div>
+                    <div class="stat-label">Kunden buchen mobil</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Buchungen möglich</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1–2</div>
+                    <div class="stat-label">Wochen bis Go-Live</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Handgeschriebener Code</div>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- PROZESS -->
+    <section id="process">
+        <div class="container">
+            <div class="process-wrapper">
+                <div class="process-left reveal">
+                    <div class="section-label" style="display:inline-block; margin-bottom:16px;">So läuft's ab</div>
+                    <h2>Von der Idee zur fertigen Website — <span style="background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">in 5 Schritten</span></h2>
+                    <p>Kein technisches Wissen nötig. Ich führe dich durch den gesamten Prozess — transparent, entspannt und ohne Überraschungen.</p>
+                    <a href="https://cal.com/julian-witteler-xdzypp/gesprach-vereinbarn" class="btn btn-primary" target="_blank">Jetzt starten →</a>
+                </div>
+                <div class="process-steps reveal">
+
+                    <div class="process-step active">
+                        <div class="step-num-wrap">
+                            <div class="step-num">01</div>
+                        </div>
+                        <div class="step-body">
+                            <span class="step-tag">Kostenlos</span>
+                            <h4>Erstgespräch (15–20 Min.)</h4>
+                            <p>Wir sprechen kurz über dein Unternehmen, deine Ziele und was du dir vorstellst. Kein Druck, kein Verkaufsgespräch — nur ein offenes Kennenlernen.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-num-wrap">
+                            <div class="step-num">02</div>
+                        </div>
+                        <div class="step-body">
+                            <span class="step-tag">3–5 Tage</span>
+                            <h4>Angebot & Konzept</h4>
+                            <p>Du bekommst innerhalb von 3–5 Tagen ein konkretes Angebot mit Umfang, Preis und Zeitplan. Keine versteckten Kosten.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-num-wrap">
+                            <div class="step-num">03</div>
+                        </div>
+                        <div class="step-body">
+                            <span class="step-tag">Design</span>
+                            <h4>Entwurf & Feedback</h4>
+                            <p>Ich entwickle das Design und zeige dir einen fertigen Entwurf. Du gibst Feedback — ich passe an bis alles passt.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-num-wrap">
+                            <div class="step-num">04</div>
+                        </div>
+                        <div class="step-body">
+                            <span class="step-tag">Umsetzung</span>
+                            <h4>Entwicklung & Buchungssystem</h4>
+                            <p>Ich programmiere deine Website von Grund auf — inklusive Buchungssystem, Mobiloptimierung und allem was dazu gehört.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-num-wrap">
+                            <div class="step-num">05</div>
+                        </div>
+                        <div class="step-body">
+                            <span class="step-tag">Go-Live</span>
+                            <h4>Launch & persönliche Übergabe</h4>
+                            <p>Deine Website geht live — und ich erkläre dir persönlich alles was du wissen musst. Du bist sofort selbständig.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </section>
+
+    <!-- PREISE -->
+    <section id="pricing">
+        <div class="container">
+            <div class="pricing-intro reveal">
+                <div class="section-label" style="display:inline-block; margin-bottom:16px;">Investition</div>
+                <h2 class="section-title">Transparent. <span>Keine Überraschungen.</span></h2>
+                <p class="section-subtitle" style="margin-bottom:0;">Wähle wie es am besten zu dir passt — beide Optionen beinhalten exakt den gleichen Leistungsumfang.</p>
+            </div>
+
+            <div class="pricing-card-wrap reveal">
+                <div class="pricing-card">
+                    <div class="pricing-top">
+                        <div>
+                            <div class="pricing-title">Deine neue Website — komplett.</div>
+                            <p class="pricing-desc">Individuelles Design, handgeschriebener Code, Online-Buchungssystem, Mobiloptimierung und persönliche Übergabe. Alles inklusive.</p>
+                        </div>
+                        <div class="pricing-options">
+                            <div class="price-option selected" id="opt-einmalig" onclick="selectOption('einmalig')">
+                                <div class="price-tag green">Einmalig · Empfohlen</div>
+                                <div class="price-amount">ab 250€</div>
+                                <div class="price-suffix">einmalige Zahlung · keine Folgekosten</div>
+                            </div>
+                            <div class="price-option" id="opt-monatlich" onclick="selectOption('monatlich')">
+                                <div class="price-tag">Monatlich · Flexibel</div>
+                                <div class="price-amount">45€ / Monat</div>
+                                <div class="price-suffix">inkl. Betreuung & Anpassungen</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pricing-features">
+                        <div class="pricing-feature"><span class="pf-check">✓</span> Individuelles Webdesign</div>
+                        <div class="pricing-feature"><span class="pf-check">✓</span> Online-Buchungssystem</div>
+                        <div class="pricing-feature"><span class="pf-check">✓</span> Mobiloptimiert & schnell</div>
+                        <div class="pricing-feature"><span class="pf-check">✓</span> Automatische E-Mail-Erinnerungen</div>
+                        <div class="pricing-feature"><span class="pf-check">✓</span> Persönliche Übergabe</div>
+                        <div class="pricing-feature"><span class="pf-check">✓</span> Go-Live in 1–2 Wochen</div>
+                        <div class="pricing-feature" id="feature-support"><span class="pf-check">✓</span> <span id="support-text">Einmalige Zahlung — keine Folgekosten</span></div>
+                        <div class="pricing-feature"><span class="pf-check">✓</span> 100% handgeschriebener Code</div>
+                    </div>
+
+                    <div class="pricing-bottom">
+                        <p class="pricing-note">Exakter Preis nach kostenlosem Erstgespräch.<br><strong>Kein Risiko — erst zahlen wenn du zufrieden bist.</strong></p>
+                        <a href="https://cal.com/julian-witteler-xdzypp/gesprach-vereinbarn" class="btn btn-primary" target="_blank">Erstgespräch buchen →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta">
+        <div class="container">
+            <div class="cta-box reveal">
+                <div class="section-label" style="display:inline-block; margin-bottom:20px;">Kostenlos & unverbindlich</div>
+                <h2>Bereit für <span style="background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">digitale Neukunden?</span></h2>
+                <p>Lass uns in einem kurzen Gespräch analysieren, wie wir auch deinen Betrieb digital nach vorne bringen. Kein Druck, keine versteckten Kosten.</p>
+                <div class="cta-btn-wrap">
+                    <a href="https://cal.com/julian-witteler-xdzypp/gesprach-vereinbarn" class="btn btn-primary btn-pulse" target="_blank" style="padding:16px 36px; font-size:1rem; position:relative; z-index:1;">⚡ Kostenloses Erstgespräch buchen</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
     <footer>
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-logo">
-                    <h3 class="logo">Witteler-Webdesign</h3>
-                    <p>Professionelle Webentwicklung und Automatisierungslösungen für kleine und mittelständische Unternehmen.</p>
+                <div>
+                    <div class="footer-logo-wrap">
+                        <span class="logo" style="font-size:1.2rem;">Witteler-Webdesign</span>
+                    </div>
+                    <p class="footer-desc">Professionelle Webentwicklung und Automatisierungslösungen für kleine und mittelständische Unternehmen.</p>
                 </div>
                 <div class="footer-col">
                     <h4>Kontakt</h4>
                     <p>Julian Witteler</p>
-                    <p>0178 6860610</p>
-                    <p>julian.witteler@gmail.com</p>
+                    <a href="tel:+491786860610">0178 6860610</a>
+                    <a href="mailto:julian.witteler@gmail.com">julian.witteler@gmail.com</a>
                 </div>
                 <div class="footer-col">
                     <h4>Anschrift</h4>
@@ -511,31 +1375,254 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Witteler-Webdesign. Alle Rechte vorbehalten.</p>
-                <p>Designed with Code.</p>
+                <p>© 2026 Witteler-Webdesign. Alle Rechte vorbehalten.</p>
+                <div class="footer-bottom-links">
+                    <a href="#" onclick="openModal('impressum'); return false;">Impressum</a>
+                    <a href="#" onclick="openModal('datenschutz'); return false;">Datenschutz</a>
+                </div>
             </div>
         </div>
     </footer>
 
+    <!-- COOKIE CONSENT BANNER -->
+    <div class="consent-overlay" id="consentOverlay">
+        <div class="consent-box">
+            <div class="consent-top">
+                <div class="consent-icon">🍪</div>
+                <div>
+                    <h3>Datenschutz & externe Dienste</h3>
+                    <p>Diese Website nutzt <strong style="color:var(--text-main);">Google Fonts</strong> (Schriftarten) und <strong style="color:var(--text-main);">cal.com</strong> (Terminbuchung). Dabei wird deine IP-Adresse an deren Server übertragen. Eigene Cookies oder Tracking setze ich nicht ein. Mit „Akzeptieren" stimmst du der Nutzung dieser externen Dienste gemäß unserer <a href="#" onclick="openModal('datenschutz'); return false;">Datenschutzerklärung</a> zu.</p>
+                </div>
+            </div>
+            <div class="consent-buttons">
+                <button class="consent-btn-reject" onclick="rejectConsent()">Ablehnen</button>
+                <button class="consent-btn-accept" onclick="acceptConsent()">Akzeptieren</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HINWEIS BEI ABLEHNUNG -->
+    <div class="consent-rejected-bar" id="rejectedBar">
+        <span>⚠️ Du hast externe Dienste abgelehnt. Google Fonts und cal.com (Terminbuchung) sind deaktiviert. Die Seite funktioniert eingeschränkt.</span>
+        <a onclick="resetConsent()">Einstellungen ändern</a>
+    </div>
+    <div class="modal-overlay" id="legalModal" onclick="handleOverlayClick(event)">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div class="modal-tabs">
+                <button class="modal-tab active" id="tab-impressum" onclick="switchTab('impressum')">Impressum</button>
+                <button class="modal-tab" id="tab-datenschutz" onclick="switchTab('datenschutz')">Datenschutzerklärung</button>
+            </div>
+
+            <!-- IMPRESSUM -->
+            <div class="modal-panel active" id="panel-impressum">
+                <h2>Impressum</h2>
+                <h3>Angaben gemäß § 5 TMG</h3>
+                <div class="modal-highlight">
+                    <p>Julian Witteler<br>
+                    Alfred-Delp-Straße 16<br>
+                    59348 Lüdinghausen<br>
+                    Deutschland</p>
+                </div>
+                <h3>Kontakt</h3>
+                <p>Telefon: <a href="tel:+491786860610">0178 6860610</a><br>
+                E-Mail: <a href="mailto:julian.witteler@gmail.com">julian.witteler@gmail.com</a></p>
+                <h3>Steuernummer</h3>
+                <p>Steuernummer: <strong style="color:#f87171;">[DEINE STEUERNUMMER HIER EINTRAGEN]</strong><br>
+                <small style="color:var(--text-muted);">Zuständiges Finanzamt Lüdinghausen</small></p>
+                <h3>Berufsbezeichnung</h3>
+                <p>Gewerbetreibender · Webdesign & Webentwicklung<br>
+                Zuständige Behörde: Ordnungsamt Lüdinghausen</p>
+                <h3>Haftung für Inhalte</h3>
+                <p>Als Diensteanbieter bin ich gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG bin ich als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen.</p>
+                <h3>Haftung für Links</h3>
+                <p>Mein Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte ich keinen Einfluss habe. Deshalb kann ich für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.</p>
+                <h3>Urheberrecht</h3>
+                <p>Die durch mich erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen meiner schriftlichen Zustimmung.</p>
+            </div>
+
+            <!-- DATENSCHUTZ -->
+            <div class="modal-panel" id="panel-datenschutz">
+                <h2>Datenschutzerklärung</h2>
+                <h3>1. Verantwortlicher</h3>
+                <div class="modal-highlight">
+                    <p>Julian Witteler · Alfred-Delp-Straße 16 · 59348 Lüdinghausen<br>
+                    E-Mail: <a href="mailto:julian.witteler@gmail.com">julian.witteler@gmail.com</a></p>
+                </div>
+                <h3>2. Erhebung und Speicherung personenbezogener Daten</h3>
+                <p>Beim Besuch dieser Website werden durch den Hosting-Anbieter automatisch folgende Daten in Server-Log-Dateien gespeichert:</p>
+                <ul>
+                    <li>IP-Adresse des anfragenden Geräts</li>
+                    <li>Datum und Uhrzeit der Anfrage</li>
+                    <li>Name und URL der abgerufenen Datei</li>
+                    <li>Website, von der der Zugriff erfolgt (Referrer-URL)</li>
+                    <li>Verwendeter Browser und ggf. Betriebssystem</li>
+                </ul>
+                <p style="margin-top:10px;">Die Verarbeitung dieser Daten erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bereitstellung der Website).</p>
+                <h3>3. Terminbuchung via cal.com</h3>
+                <p>Für die Online-Terminbuchung nutze ich den Dienst <strong style="color:var(--text-main);">cal.com</strong> (Cal.com, Inc., 2261 Market Street #5220, San Francisco, CA 94114, USA). Bei der Buchung werden von Ihnen eingegebene Daten (Name, E-Mail, Nachricht) direkt an cal.com übermittelt. Es gelten die <a href="https://cal.com/privacy" target="_blank">Datenschutzbestimmungen von cal.com</a>. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung).</p>
+                <h3>4. Google Fonts</h3>
+                <p>Diese Website lädt Schriftarten von Google Fonts (Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA). Dabei wird Ihre IP-Adresse an Google übermittelt. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO. Weitere Infos: <a href="https://policies.google.com/privacy" target="_blank">Google Datenschutzerklärung</a>.</p>
+                <h3>5. Ihre Rechte</h3>
+                <p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung sowie Datenübertragbarkeit. Wenden Sie sich dazu jederzeit an mich per E-Mail. Außerdem haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren.</p>
+                <h3>6. Keine Cookies / Kein Tracking</h3>
+                <p>Diese Website setzt keine eigenen Cookies und verwendet kein eigenes Tracking oder Analytics. Es werden keine Nutzerprofile erstellt.</p>
+                <h3>7. Kontakt bei Datenschutzfragen</h3>
+                <p>Bei Fragen zum Datenschutz: <a href="mailto:julian.witteler@gmail.com">julian.witteler@gmail.com</a></p>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Scroll-Reveal Animation: Elemente blenden weich ein, wenn man zu ihnen scrollt
+        // ===== COOKIE CONSENT =====
+        (function() {
+            const stored = localStorage.getItem('ww_consent');
+            if (stored === 'accepted') {
+                // all good, do nothing (fonts + cal.com already in HTML)
+            } else if (stored === 'rejected') {
+                showRejectedState();
+            } else {
+                // no decision yet → show banner
+                document.getElementById('consentOverlay').classList.add('show');
+            }
+        })();
+
+        function acceptConsent() {
+            localStorage.setItem('ww_consent', 'accepted');
+            document.getElementById('consentOverlay').classList.remove('show');
+            document.getElementById('rejectedBar').classList.remove('show');
+        }
+
+        function rejectConsent() {
+            localStorage.setItem('ww_consent', 'rejected');
+            document.getElementById('consentOverlay').classList.remove('show');
+            showRejectedState();
+        }
+
+        function showRejectedState() {
+            document.getElementById('rejectedBar').classList.add('show');
+            // Disable cal.com booking links
+            document.querySelectorAll('a[href*="cal.com"]').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Du hast externe Dienste abgelehnt. Bitte ändere deine Einstellungen um Termine zu buchen.');
+                });
+                el.style.opacity = '0.5';
+                el.title = 'Externe Dienste deaktiviert';
+            });
+        }
+
+        function resetConsent() {
+            localStorage.removeItem('ww_consent');
+            document.getElementById('rejectedBar').classList.remove('show');
+            document.getElementById('consentOverlay').classList.add('show');
+        }
+
+        // Header scroll state
+        const header = document.getElementById('header');
+        const navCtaDesktop = document.getElementById('nav-cta-desktop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) {
+                header.classList.add('scrolled');
+                navCtaDesktop.style.display = 'inline-flex';
+            } else {
+                header.classList.remove('scrolled');
+                navCtaDesktop.style.display = 'none';
+            }
+        });
+
+        // Burger menu
+        const burger = document.getElementById('burger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        burger.addEventListener('click', () => {
+            burger.classList.toggle('open');
+            mobileMenu.classList.toggle('open');
+        });
+        function closeMenu() {
+            burger.classList.remove('open');
+            mobileMenu.classList.remove('open');
+        }
+
+        // Scroll reveal with staggered delays
         const reveals = document.querySelectorAll('.reveal');
-
         function revealOnScroll() {
-            for (let i = 0; i < reveals.length; i++) {
-                const windowHeight = window.innerHeight;
-                const elementTop = reveals[i].getBoundingClientRect().top;
-                const elementVisible = 100; // Pixel, die das Element sichtbar sein muss, bevor es triggert
+            reveals.forEach(el => {
+                const top = el.getBoundingClientRect().top;
+                if (top < window.innerHeight - 80) el.classList.add('active');
+            });
+        }
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
 
-                if (elementTop < windowHeight - elementVisible) {
-                    reveals[i].classList.add('active');
-                }
+        // Pricing toggle
+        function selectOption(type) {
+            document.getElementById('opt-einmalig').classList.toggle('selected', type === 'einmalig');
+            document.getElementById('opt-monatlich').classList.toggle('selected', type === 'monatlich');
+            const supportText = document.getElementById('support-text');
+            if (type === 'monatlich') {
+                supportText.textContent = 'Laufende Betreuung & Anpassungen inklusive';
+            } else {
+                supportText.textContent = 'Einmalige Zahlung — keine Folgekosten';
             }
         }
 
-        window.addEventListener('scroll', revealOnScroll);
-        // Einmal beim Laden ausführen, falls Elemente bereits im Sichtfeld sind
-        window.addEventListener('load', revealOnScroll);
+        // Process steps auto-cycle + hover
+        const processSteps = document.querySelectorAll('.process-step');
+        let activeStep = 0;
+        let cycleInterval;
+
+        function setActiveStep(i) {
+            processSteps.forEach(s => s.classList.remove('active'));
+            processSteps[i].classList.add('active');
+            activeStep = i;
+        }
+
+        function startCycle() {
+            cycleInterval = setInterval(() => {
+                setActiveStep((activeStep + 1) % processSteps.length);
+            }, 2800);
+        }
+
+        processSteps.forEach((step, i) => {
+            step.addEventListener('mouseenter', () => {
+                clearInterval(cycleInterval);
+                setActiveStep(i);
+            });
+            step.addEventListener('mouseleave', () => {
+                startCycle();
+            });
+        });
+
+        startCycle();
+
+        // Animate booking time slots
+        const slots = document.querySelectorAll('.time-slot:not(.selected)');
+        let slotIdx = 0;
+        setInterval(() => {
+            slots.forEach(s => s.classList.remove('selected'));
+            document.querySelectorAll('.time-slot')[Math.floor(Math.random()*6)].classList.add('selected');
+        }, 2200);
+
+        // Modal
+        function openModal(tab) {
+            document.getElementById('legalModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+            switchTab(tab);
+        }
+        function closeModal() {
+            document.getElementById('legalModal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        function handleOverlayClick(e) {
+            if (e.target === document.getElementById('legalModal')) closeModal();
+        }
+        function switchTab(tab) {
+            ['impressum','datenschutz'].forEach(t => {
+                document.getElementById('panel-' + t).classList.toggle('active', t === tab);
+                document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+            });
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     </script>
 </body>
 </html>
