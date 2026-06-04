@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine coole Test-Website</title>
+    <style>
+        /* Modernes CSS-Reset und Variablen */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --accent-glow: #0369a1;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Header / Navigation */
+        header {
+            width: 100%;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Hauptinhalt */
+        main {
+            margin-top: 5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .hero-section {
+            padding: 3rem 1rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .highlight {
+            color: var(--accent-color);
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+
+        /* Interaktiver Button */
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: #0f172a;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(56, 189, 248, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
+            background: #7dd3fc;
+        }
+
+        /* Karten-Bereich (Features) */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+
+        .card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem;
+            color: #64748b;
+            font-size: 0.875rem;
+            width: 100%;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+        }
+
+        /* Anpassung für Mobilgeräte */
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .subtitle { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">DevLab //</div>
+        <div id="greeting" style="font-size: 0.9rem; color: #94a3b8;">Hi!</div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <h1>Willkommen auf deiner <span class="highlight">neuen Website</span></h1>
+            <p class="subtitle">Sauberer Code, modernes Design und vollkommen bereit für deine eigenen Ideen. Alles in nur einer einzigen Datei.</p>
+            <button class="btn" onclick="celebrate()">Klick mich mal</button>
+        </section>
+
+        <section class="features">
+            <div class="card">
+                <h3>⚡ HTML5 & CSS3</h3>
+                <p>Modernes Layout mit CSS Grid und Variablen für super einfaches Anpassen der Farben.</p>
+            </div>
+            <div class="card">
+                <h3>📱 Responsive</h3>
+                <p>Sieht auf dem Smartphone genauso gut aus wie auf einem riesigen Desktop-Monitor.</p>
+            </div>
+            <div class="card">
+                <h3>🚀 JavaScript</h3>
+                <p>Ein bisschen interaktiver Code ist auch schon an Bord. Schau dir den Button an!</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> – Erstellt als coole Test-Basis.</p>
+    </footer>
+
+    <script>
+        // Dynamisches Jahr im Footer anzeigen
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Begrüßung basierend auf der Uhrzeit anpassen
+        const hours = new Date().getHours();
+        const greetingElement = document.getElementById('greeting');
+        if (hours < 12) {
+            greetingElement.textContent = "Guten Morgen! ☀️";
+        } else if (hours < 18) {
+            greetingElement.textContent = "Schönen Nachmittag! ☕";
+        } else {
+            greetingElement.textContent = "Guten Abend! 🌙";
+        }
+
+        // Eine kleine interaktive Funktion für den Button
+        function celebrate() {
+            alert("🚀 Boom! Das JavaScript funktioniert auch einwandfrei. Viel Spaß beim Basteln!");
+        }
+    </script>
+</body>
+</html>
