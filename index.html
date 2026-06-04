@@ -3,216 +3,539 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine coole Test-Website</title>
+    <title>Witteler-Webdesign | Moderne Websites & Buchungssysteme</title>
     <style>
-        /* Modernes CSS-Reset und Variablen */
+        /* --- DESIGN SYSTEM & VARIABLEN --- */
+        :root {
+            --bg-main: #0a0f1d;
+            --bg-card: #131c31;
+            --accent: #3b82f6;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- RESET & BASICS --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --accent-color: #38bdf8;
-            --accent-glow: #0369a1;
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font);
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        /* Header / Navigation */
+        /* --- REUSABLE COMPONENTS --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-main);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- ANIMATION HELPERS (Scroll-triggered) --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- NAVIGATION --- */
         header {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 1.5rem 2rem;
+            z-index: 1000;
+            background: rgba(10, 15, 29, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        nav {
+            height: 80px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            top: 0;
-            z-index: 100;
         }
 
         .logo {
+            font-size: 1.5rem;
             font-weight: 800;
-            font-size: 1.25rem;
-            color: var(--accent-color);
+            letter-spacing: -0.5px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--text-main);
+        }
+
+        /* --- HERO SECTION --- */
+        #home {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 100px;
+            position: relative;
+        }
+
+        .hero-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .hero-text p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .hero-image-container {
+            position: relative;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: auto;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* --- SERVICES (LEISTUNGEN) --- */
+        #services {
+            padding: 120px 0;
+            background: rgba(255,255,255,0.01);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 40px;
+            border-radius: 20px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1;
+        }
+
+        .service-card:hover::before {
+            opacity: 0.03;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .service-icon-wrapper {
+            margin-bottom: 24px;
+            height: 60px;
+        }
+
+        .service-icon-wrapper img {
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+        }
+
+        /* --- SPEZIAL-FEATURE (BUCHUNGSSYSTEM) --- */
+        #booking-feature {
+            padding: 100px 0;
+            background: radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+        }
+
+        .feature-box {
+            background: linear-gradient(135deg, rgba(19, 28, 49, 0.9) 0%, rgba(10, 15, 29, 0.9) 100%);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 32px;
+            padding: 60px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .feature-badge {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* Hauptinhalt */
-        main {
-            margin-top: 5rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            text-align: center;
-            max-width: 800px;
+        .feature-showcase img {
             width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
         }
 
-        .hero-section {
-            padding: 3rem 1rem;
+        /* --- CALL TO ACTION (KONTAKT-TRIGGER) --- */
+        #cta {
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
         }
 
-        h1 {
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
             font-size: 3rem;
             font-weight: 800;
-            margin-bottom: 1rem;
-            line-height: 1.2;
+            margin-bottom: 24px;
         }
 
-        .highlight {
-            color: var(--accent-color);
-            text-shadow: 0 0 20px var(--accent-glow);
-        }
-
-        .subtitle {
-            font-size: 1.25rem;
-            color: #94a3b8;
-            margin-bottom: 2rem;
-        }
-
-        /* Interaktiver Button */
-        .btn {
-            display: inline-block;
-            background: var(--accent-color);
-            color: #0f172a;
-            padding: 0.75rem 2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 14px rgba(56, 189, 248, 0.4);
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
-            background: #7dd3fc;
-        }
-
-        /* Karten-Bereich (Features) */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            width: 100%;
-            margin-top: 3rem;
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 16px;
-            border: 1px solid #334155;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-color);
-        }
-
-        .card h3 {
-            margin-bottom: 0.5rem;
-            color: var(--accent-color);
-        }
-
-        .card p {
-            color: #94a3b8;
+        /* --- FOOTER & IMPRESSUM --- */
+        footer {
+            background: #060a14;
+            padding: 60px 0 30px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
             font-size: 0.95rem;
         }
 
-        /* Footer */
-        footer {
-            padding: 2rem;
-            color: #64748b;
-            font-size: 0.875rem;
-            width: 100%;
-            text-align: center;
-            border-top: 1px solid #1e293b;
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
         }
 
-        /* Anpassung für Mobilgeräte */
-        @media (max-width: 600px) {
-            h1 { font-size: 2rem; }
-            .subtitle { font-size: 1rem; }
+        .footer-logo h3 {
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+        }
+
+        .footer-logo p {
+            color: var(--text-muted);
+            max-width: 300px;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .footer-col p {
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* --- RESPONSIVE DESIGN (MOBILOPTIMIERUNG) --- */
+        @media (max-width: 968px) {
+            .hero-wrapper {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 40px;
+            }
+            .hero-text h1 {
+                font-size: 2.8rem;
+            }
+            .hero-text p {
+                margin: 0 auto 40px auto;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .feature-box {
+                grid-template-columns: 1fr;
+                padding: 40px;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .nav-links {
+                display: none; /* Für ein echtes Kundenprojekt könnte hier ein Burger-Menü hin */
+            }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">DevLab //</div>
-        <div id="greeting" style="font-size: 0.9rem; color: #94a3b8;">Hi!</div>
+        <div class="container">
+            <nav>
+                <div class="logo">Witteler-Webdesign</div>
+                <ul class="nav-links">
+                    <li><a href="#home">Start</a></li>
+                    <li><a href="#services">Leistungen</a></li>
+                    <li><a href="#booking-feature">Vorteile</a></li>
+                    <li><a href="#cta">Kontakt</a></li>
+                </ul>
+                <a href="HIER_DEIN_CAL_COM_LINK_EINTRAGEN" class="btn btn-secondary" target="_blank">Termin buchen</a>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <section class="hero-section">
-            <h1>Willkommen auf deiner <span class="highlight">neuen Website</span></h1>
-            <p class="subtitle">Sauberer Code, modernes Design und vollkommen bereit für deine eigenen Ideen. Alles in nur einer einzigen Datei.</p>
-            <button class="btn" onclick="celebrate()">Klick mich mal</button>
-        </section>
+    <section id="home">
+        <div class="container">
+            <div class="hero-wrapper">
+                <div class="hero-text">
+                    <h1>Moderne Websites die <br><span>Kunden konvertieren</span></h1>
+                    <p>Ich entwickle maßgeschneiderte Web-Lösungen für kleine Betriebe und Salons. Inklusive vollautomatischer Online-Terminbuchung für mehr Umsatz und weniger Telefonstress.</p>
+                    <div class="hero-buttons">
+                        <a href="HIER_DEIN_CAL_COM_LINK_EINTRAGEN" class="btn btn-primary" target="_blank">Jetzt Erstgespräch sichern</a>
+                        <a href="#services" class="btn btn-secondary">Mehr erfahren</a>
+                    </div>
+                </div>
+                <div class="hero-image-container">
+                    <img src="hero_workspace.png" alt="Moderner Arbeitsplatz Webentwicklung" class="hero-img">
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <section class="features">
-            <div class="card">
-                <h3>⚡ HTML5 & CSS3</h3>
-                <p>Modernes Layout mit CSS Grid und Variablen für super einfaches Anpassen der Farben.</p>
+    <section id="services">
+        <div class="container">
+            <h2 class="section-title reveal">Meine <span>Leistungen</span></h2>
+            <div class="services-grid">
+                
+                <div class="service-card reveal">
+                    <div class="service-icon-wrapper">
+                        <img src="service_icons.png" alt="Webdesign Icon">
+                    </div>
+                    <h3>High-End Webdesign</h3>
+                    <p>Individuelle Designs, perfekt abgestimmt auf dein Handwerk oder deinen Salon. Keine starren Baukästen, sondern Code, der performt.</p>
+                </div>
+
+                <div class="service-card reveal">
+                    <div class="service-icon-wrapper">
+                        <img src="service_icons.png" alt="Booking Icon">
+                    </div>
+                    <h3>Smartes Buchungssystem</h3>
+                    <p>Deine Kunden buchen 24/7 direkt auf deiner Seite. Synchronisiert mit deinem Kalender, inklusive automatischer Erinnerungen.</p>
+                </div>
+
+                <div class="service-card reveal">
+                    <div class="service-icon-wrapper">
+                        <img src="service_icons.png" alt="Mobile Responsive Icon">
+                    </div>
+                    <h3>Responsive & Schnell</h3>
+                    <p>Über 70% der Salon-Kunden buchen übers Smartphone. Deine neue Website lädt blitzschnell und sieht auf jedem Handy perfekt aus.</p>
+                </div>
+
             </div>
-            <div class="card">
-                <h3>📱 Responsive</h3>
-                <p>Sieht auf dem Smartphone genauso gut aus wie auf einem riesigen Desktop-Monitor.</p>
+        </div>
+    </section>
+
+    <section id="booking-feature">
+        <div class="container">
+            <div class="feature-box reveal">
+                <div class="feature-text">
+                    <span class="feature-badge">Umsatz-Booster</span>
+                    <h2>Nie wieder Termine am Telefon verlieren</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 24px;">Während du dich um deine Kunden kümmerst, füllt sich dein Terminkalender von ganz allein. Ein integriertes Online-Buchungssystem sorgt für spürbar weniger Ausfälle und maximale Auslastung.</p>
+                    <a href="HIER_DEIN_CAL_COM_LINK_EINTRAGEN" class="btn btn-primary" target="_blank">Live-Demo ansehen</a>
+                </div>
+                <div class="feature-showcase">
+                    <img src="gallery1.png" alt="Vorschau des Buchungssystems">
+                </div>
             </div>
-            <div class="card">
-                <h3>🚀 JavaScript</h3>
-                <p>Ein bisschen interaktiver Code ist auch schon an Bord. Schau dir den Button an!</p>
+        </div>
+    </section>
+
+    <section id="cta">
+        <div class="container">
+            <div class="cta-content reveal">
+                <h2>Bereit für digitale Neukunden?</h2>
+                <p style="color: var(--text-muted); margin-bottom: 40px; font-size: 1.2rem;">Lass uns in einem kurzen, unverbindlichen Gespräch analysieren, wie wir auch deinen Betrieb digital ganz nach vorne bringen.</p>
+                <a href="HIER_DEIN_CAL_COM_LINK_EINTRAGEN" class="btn btn-primary" style="padding: 18px 40px; font-size: 1.1rem;" target="_blank">⚡ Kostenloses Erstgespräch buchen</a>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
     <footer>
-        <p>&copy; <span id="year"></span> – Erstellt als coole Test-Basis.</p>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-logo">
+                    <h3 class="logo">Witteler-Webdesign</h3>
+                    <p>Professionelle Webentwicklung und Automatisierungslösungen für kleine und mittelständische Unternehmen.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Kontakt</h4>
+                    <p>Julian Witteler</p>
+                    <p>0178 6860610</p>
+                    <p>julian.witteler@gmail.com</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Anschrift</h4>
+                    <p>Alfred-Delp-Straße 16</p>
+                    <p>59348 Lüdinghausen</p>
+                    <p>Deutschland</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Witteler-Webdesign. Alle Rechte vorbehalten.</p>
+                <p>Designed with Code.</p>
+            </div>
+        </div>
     </footer>
 
     <script>
-        // Dynamisches Jahr im Footer anzeigen
-        document.getElementById('year').textContent = new Date().getFullYear();
+        // Scroll-Reveal Animation: Elemente blenden weich ein, wenn man zu ihnen scrollt
+        const reveals = document.querySelectorAll('.reveal');
 
-        // Begrüßung basierend auf der Uhrzeit anpassen
-        const hours = new Date().getHours();
-        const greetingElement = document.getElementById('greeting');
-        if (hours < 12) {
-            greetingElement.textContent = "Guten Morgen! ☀️";
-        } else if (hours < 18) {
-            greetingElement.textContent = "Schönen Nachmittag! ☕";
-        } else {
-            greetingElement.textContent = "Guten Abend! 🌙";
+        function revealOnScroll() {
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveals[i].getBoundingClientRect().top;
+                const elementVisible = 100; // Pixel, die das Element sichtbar sein muss, bevor es triggert
+
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add('active');
+                }
+            }
         }
 
-        // Eine kleine interaktive Funktion für den Button
-        function celebrate() {
-            alert("🚀 Boom! Das JavaScript funktioniert auch einwandfrei. Viel Spaß beim Basteln!");
-        }
+        window.addEventListener('scroll', revealOnScroll);
+        // Einmal beim Laden ausführen, falls Elemente bereits im Sichtfeld sind
+        window.addEventListener('load', revealOnScroll);
     </script>
 </body>
 </html>
