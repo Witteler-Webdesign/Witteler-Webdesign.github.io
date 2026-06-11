@@ -1,0 +1,6 @@
+{
+  "name": "Witteler-Webdesign",
+  "description": "Maßgeschneidertes High-End Webdesign & smarte Buchungssysteme für kleine Betriebe, Dienstleister und Salons.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
