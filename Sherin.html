@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Für Sherin - Julian's private Liebeswelt</title>
+  <!-- Tailwind CSS Playfield Playback -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0c0714;
+      color: #fce7f3;
+      overflow-x: hidden;
+    }
+    .font-romantic { font-family: 'Dancing Script', cursive; }
+    .font-serif-elegant { font-family: 'Playfair Display', serif; }
+    
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0; }
+      15% { opacity: 0.8; }
+      90% { opacity: 0.8; }
+      100% { transform: translateY(-20vh) scale(1.2) rotate(360deg); opacity: 0; }
+    }
+    @keyframes hoverGentle {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.6); }
+    }
+    .animate-float { animation: floatUp 14s linear infinite; }
+    .animate-hover { animation: hoverGentle 4s ease-in-out infinite; }
+    .animate-pulse-glow { animation: pulseGlow 3500ms ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-[#0c0714] text-pink-100 min-h-screen pb-24">
+
+  <!-- Floating Hearts Background Container -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0" id="hearts-background"></div>
+
+  <!-- PASSWORD WALL -->
+  <div id="password-wall" class="fixed inset-0 z-50 bg-[#07030c] flex flex-col items-center justify-center p-6 select-none transition-all duration-700">
+    <div class="max-w-md w-full bg-slate-900/60 backdrop-blur-xl border border-pink-500/20 p-8 rounded-3xl text-center shadow-2xl relative overflow-hidden animate-pulse-glow">
+      <div class="absolute -top-10 -right-10 w-40 h-40 bg-pink-500/10 rounded-full blur-2xl"></div>
+      
+      <div class="h-16 w-16 bg-gradient-to-tr from-pink-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-pink-500/20 animate-bounce">
+        <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+
+      <h1 class="text-3xl font-bold font-serif-elegant tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-rose-200 to-pink-100 mb-2">
+        Unsichtbare Fäden
+      </h1>
+      <p class="text-pink-300/80 font-romantic text-2xl mb-8">Zutritt nur für die Liebste ❤️</p>
+      
+      <form id="unlock-form" class="space-y-4">
+        <div class="relative">
+          <input type="password" id="pass-input" placeholder="Geheimes Liebespasswort eingeben... 🤫" 
+                 class="w-full bg-[#170e24] border border-pink-500/20 rounded-2xl px-5 py-4 text-center tracking-widest text-pink-100 outline-none focus:ring-2 focus:ring-pink-500/50 transition-all font-semibold placeholder-pink-300/30">
+        </div>
+        <p id="error-msg" class="text-rose-400 text-sm font-semibold hidden">Das Passwort stimmt leider nicht... 🤫</p>
+        
+        <button type="submit" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 font-semibold text-white py-4 rounded-2xl shadow-lg hover:shadow-pink-500/30 transform active:scale-95 transition-all text-center">
+          In unsere Welt eintreten →
+        </button>
+      </form>
+      
+      <p class="text-xs text-pink-300/40 mt-8">Ein Geschenk von Julian mit ganz viel Liebe</p>
+    </div>
+  </div>
+
+  <!-- MAIN APP (Hidden initially) -->
+  <div id="main-content" class="hidden relative z-10 max-w-lg mx-auto px-4 pt-6 space-y-6">
+    
+    <!-- HEADER -->
+    <header class="flex items-center justify-between bg-slate-900/40 backdrop-blur-md border border-pink-500/10 p-4 rounded-3xl">
+      <div class="flex items-center space-x-3">
+        <div class="h-10 w-10 bg-pink-500/20 rounded-full flex items-center justify-center animate-pulse">
+          <span class="text-xl">👩‍❤️‍👨</span>
+        </div>
+        <div>
+          <h2 class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-200 to-rose-300">${partnerNames}</h2>
+          <p class="text-xs text-pink-300/60 font-romantic" id="header-date">Seit dem ${anniversaryDate.split('-').reverse().join('.')} vereint</p>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center gap-1.5 bg-pink-500/10 rounded-full p-1 border border-pink-500/10">
+          <button onclick="prevTrack()" class="h-8 w-8 rounded-full bg-pink-500/15 hover:bg-pink-500/30 flex items-center justify-center transition-all text-pink-300 text-xs">⏮</button>
+          <button onclick="toggleMusic()" class="h-8 w-8 rounded-full bg-pink-500/25 hover:bg-pink-500/40 flex items-center justify-center transition-all text-pink-300 text-xs" id="music-indicator">▶</button>
+          <button onclick="nextTrack()" class="h-8 w-8 rounded-full bg-pink-500/15 hover:bg-pink-500/30 flex items-center justify-center transition-all text-pink-300 text-xs">⏭</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- LIVE BEZIEHUNGSZÄHLER -->
+    <section class="bg-gradient-to-b from-[#1c0f2f] to-[#12081f] border border-pink-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
+      <div class="absolute inset-0 bg-radial-gradient from-pink-500/10 to-transparent pointer-events-none"></div>
+      <h3 class="text-xs uppercase tracking-wider text-pink-400 font-semibold mb-3">Unsere gemeinsame Zeit</h3>
+      
+      <div class="grid grid-cols-4 gap-2">
+        <div class="bg-[#24153b]/60 backdrop-blur border border-pink-500/10 p-3 rounded-2xl">
+          <span id="count-days" class="block text-2xl font-bold font-serif-elegant text-pink-200">00</span>
+          <span class="text-[10px] text-pink-300/60 font-medium">Tage</span>
+        </div>
+        <div class="bg-[#24153b]/60 backdrop-blur border border-pink-500/10 p-3 rounded-2xl">
+          <span id="count-hours" class="block text-2xl font-bold font-serif-elegant text-pink-200">00</span>
+          <span class="text-[10px] text-pink-300/60 font-medium">Std.</span>
+        </div>
+        <div class="bg-[#24153b]/60 backdrop-blur border border-pink-500/10 p-3 rounded-2xl">
+          <span id="count-mins" class="block text-2xl font-bold font-serif-elegant text-pink-200">00</span>
+          <span class="text-[10px] text-pink-300/60 font-medium">Min.</span>
+        </div>
+        <div class="bg-[#24153b]/60 backdrop-blur border border-pink-500/10 p-3 rounded-2xl">
+          <span id="count-secs" class="block text-2xl font-bold font-serif-elegant text-rose-400 animate-pulse">00</span>
+          <span class="text-[10px] text-pink-300/60 font-medium">Sek.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB WRAPPERS -->
+    <main id="tab-viewport" class="space-y-6">
+      
+      <!-- HERO & BRIEF (TAB: HOME) -->
+      <div id="tab-home" class="tab-pane space-y-6">
+        <div class="text-center py-6">
+          <h2 class="text-3xl font-bold font-serif-elegant text-transparent bg-clip-text bg-gradient-to-r from-pink-200 to-rose-300 mb-2 whitespace-pre-line leading-tight">
+            ${subTitle}
+          </h2>
+          <div class="text-pink-100/90 text-sm leading-relaxed px-4 bg-slate-900/30 py-5 rounded-3xl border border-white/5 space-y-3">
+            <p class="whitespace-pre-line">${descText1}</p>
+            ${descText2 ? `<p class="whitespace-pre-line pt-1">${descText2}</p>` : ''}
+            <span class="block text-right font-romantic text-pink-300 text-2xl pt-2">— In Liebe, ${partnerNames.split('&')[0]?.trim() || 'Julian'} ❤️</span>
+          </div>
+        </div>
+
+        <!-- DIGITAL LIEBESBRIEF -->
+        <div class="bg-slate-900/40 backdrop-blur border border-pink-500/20 p-6 rounded-3xl shadow-xl relative overflow-hidden">
+          <div class="flex items-center space-x-3 mb-4">
+            <span class="text-2xl">💌</span>
+            <h3 class="text-lg font-bold font-serif-elegant text-pink-200">Persönlicher Liebesbrief</h3>
+          </div>
+          
+          <div id="envelope-letter" class="bg-amber-50/10 p-4 border border-pink-300/10 rounded-2xl text-center space-y-4">
+            <p class="text-pink-300 text-sm font-romantic text-2xl">Lies meine tiefsten Zeilen...</p>
+            <button onclick="toggleEnvelope()" class="px-6 py-3 bg-pink-500/25 flex items-center justify-center space-x-2 text-pink-200 font-semibold rounded-2xl hover:bg-pink-500/50 transition-all mx-auto border border-pink-500/30">
+              <span>Brief aufmachen 🌹</span>
+            </button>
+            <div id="envelope-content" class="hidden text-left text-slate-800 bg-[#fefcf6] p-6 rounded-2xl font-romantic text-2xl border border-amber-200/50 leading-relaxed shadow-inner mt-4 animate-fade-in text-slate-800 whitespace-pre-line">
+              ${loveLetterText}
+            </div>
+          </div>
+        </div>
+
+        <!-- QUOTES SECTION IN HOME -->
+        <div class="bg-slate-900/40 backdrop-blur border border-pink-500/10 p-6 rounded-3xl text-center">
+          <span class="text-2xl block mb-2">💫</span>
+          <p id="quote-text" class="text-pink-200 italic font-medium mb-4">"Für die Welt bist du irgendjemand, aber für mich bist du die Welt. ❤️"</p>
+          <button onclick="nextQuote()" class="text-xs bg-pink-500/20 text-pink-300 font-semibold px-4 py-2 rounded-full hover:bg-pink-500/30 transition-all">
+            Neues Liebeszitat ✨
+          </button>
+        </div>
+      </div>
+
+      <!-- DIGITALES LIEBESGLAS (TAB: LOVEJAR) -->
+      <div id="tab-lovejar" class="tab-pane hidden space-y-6">
+        <div class="text-center max-w-sm mx-auto">
+          <h2 class="text-2xl font-bold font-serif-elegant text-pink-200">Das magische Liebesglas</h2>
+          <p class="text-xs text-pink-300/80 mt-1">Gefüllt mit euren schönsten Komplimenten, Erinnerungen und Gutscheinen.</p>
+          <div id="jar-count-badge" class="mt-2 inline-block bg-pink-500/10 border border-pink-500/20 text-pink-300 px-3 py-1 rounded-full text-[10px] font-bold font-mono">
+            ${notes.length} Zettel im Glas 🌟
+          </div>
+        </div>
+
+        <!-- GLAS VISUAL -->
+        <div class="flex justify-center py-4 select-none">
+          <div onclick="readRandomNote()" class="animate-hover relative w-52 h-72 bg-gradient-to-b from-white/20 to-white/5 border-2 border-white/30 rounded-t-[50px] rounded-b-[40px] shadow-2xl flex flex-col justify-between items-center p-6 cursor-pointer overflow-hidden animate-pulse-glow">
+            <!-- Glasdeckel -->
+            <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-28 h-6 bg-gradient-to-r from-amber-600 to-amber-800 rounded-lg shadow border-b border-amber-900/40 z-20"></div>
+            <!-- Glashals faden -->
+            <div class="absolute top-5 left-1/2 -translate-x-1/2 w-24 h-4 bg-white/25 rounded-md z-10 border-b border-white/10"></div>
+            
+            <!-- Schwebende kleine Zettelchen im Glas -->
+            <div class="flex-grow w-full relative">
+              <div class="absolute bottom-4 left-6 w-10 h-6 bg-pink-200/80 rounded-sm rotate-12 shadow flex items-center justify-center text-[8px] font-bold text-pink-700/80">❤</div>
+              <div class="absolute bottom-12 right-6 w-12 h-6 bg-purple-200/90 rounded-sm -rotate-12 shadow flex items-center justify-center text-[8px] font-bold text-purple-700/80">⭐</div>
+              <div class="absolute bottom-8 left-16 w-11 h-6 bg-rose-100/90 rounded-sm rotate-45 shadow flex items-center justify-center text-[8px] font-bold text-rose-700/85">💌</div>
+              <div class="absolute bottom-20 left-10 w-10 h-6 bg-yellow-100/80 rounded-sm -rotate-45 shadow flex items-center justify-center text-[8px] font-bold text-yellow-700/80">🎁</div>
+            </div>
+
+            <!-- Jar Label -->
+            <div class="bg-amber-100/95 border border-amber-800/20 px-3 py-1.5 rounded-lg text-amber-900 font-romantic text-lg font-bold text-center w-36 select-none z-10 shadow-md">
+              ${partnerNames.split('&')[0]?.trim() || 'Julians'} Liebesglas
+            </div>
+            
+            <div class="text-[10px] text-pink-300 font-bold tracking-widest mt-2 uppercase">Anklicken ✨</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <button onclick="readRandomNote()" class="bg-gradient-to-tr from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white p-4 rounded-3xl text-center space-y-1 shadow-lg transition-all active:scale-95">
+            <span class="text-2xl block">📖</span>
+            <span class="block font-bold text-sm">Zettel öffnen</span>
+            <span class="block text-[10px] text-white/70">Limit: ${disableLimits ? 'Keines' : '1 am Tag'}</span>
+          </button>
+          
+          <button onclick="openWriteModal()" class="bg-slate-900/40 border border-pink-500/20 hover:bg-slate-900/60 p-4 rounded-3xl text-center space-y-1 transition-all active:scale-95 text-pink-200">
+            <span class="text-2xl block">✍</span>
+            <span class="block font-bold text-sm">Zettel schreiben</span>
+            <span class="block text-[10px] text-pink-300/60">Limit: ${disableLimits ? 'Keines' : '2 am Tag'}</span>
+          </button>
+        </div>
+
+        <!-- READ DISPLAY (MODAL / OVERLAY) -->
+        <div id="read-note-modal" class="hidden bg-[#1c122b]/95 border border-pink-500/30 p-6 rounded-3xl text-center relative animate-fade-in shadow-2xl">
+          <button onclick="closeJarDialogs()" class="absolute top-4 right-4 text-pink-300 hover:text-white">✕</button>
+          <div class="h-12 w-12 bg-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl">💌</span>
+          </div>
+          <span class="text-[10px] uppercase font-bold tracking-wider text-pink-400">Botschaft für die Liebste</span>
+          
+          <!-- Note Content Container -->
+          <div class="my-6 p-6 bg-amber-50/10 border border-pink-300/20 rounded-2xl text-pink-100 font-romantic text-2xl leading-relaxed shadow-inner">
+            <p id="note-text-display"></p>
+            <p id="note-author-display" class="text-right text-sm text-pink-300 font-bold mt-4"></p>
+          </div>
+          
+          <p class="text-[10px] text-pink-300/60 leading-relaxed">Dieser Zettel geht zurück ins Glas. Morgen darfst du einen neuen öffnen! ❤️</p>
+        </div>
+
+        <!-- WRITE MODAL (OVERLAY) -->
+        <div id="write-note-modal" class="hidden bg-[#1c122b]/95 border border-pink-500/30 p-6 rounded-3xl relative animate-fade-in shadow-2xl">
+          <button onclick="closeJarDialogs()" class="absolute top-4 right-4 text-pink-300 hover:text-white">✕</button>
+          <h3 class="text-md font-bold text-pink-200 mb-4 flex items-center gap-2">
+            <span>✍</span> Eine neue Botschaft hineinwerfen
+          </h3>
+          <p id="write-limit-info" class="text-xs text-pink-300/70 mb-4"></p>
+          
+          <form id="jar-write-form" class="space-y-4">
+            <div>
+              <label class="block text-xs uppercase tracking-wider text-pink-300/60 mb-1 font-bold">Kategorie</label>
+              <select id="write-category" class="w-full bg-[#271b3c] border border-pink-500/20 rounded-xl p-3 text-pink-100 outline-none">
+                <option value="compliment">🌹 Kompliment / Süßes</option>
+                <option value="memory">🕒 Besondere Erinnerung</option>
+                <option value="voucher">🎫 Gutschein / Überraschung</option>
+                <option value="dream">✨ Herzenswunsch</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs uppercase tracking-wider text-pink-300/60 mb-1 font-bold">Wer schreibt den Zettel? (Dein Name)</label>
+              <input type="text" id="write-author" placeholder="z. B. Julian" required 
+                     class="w-full bg-[#271b3c] border border-pink-500/20 rounded-xl p-3 text-pink-100 outline-none placeholder-pink-300/25">
+            </div>
+            <div>
+              <label class="block text-xs uppercase tracking-wider text-pink-300/60 mb-1 font-bold">Deine Liebesnachricht</label>
+              <textarea id="write-content" rows="3" placeholder="Schreibe hier etwas Besonderes für das Liebesglas..." 
+                        class="w-full bg-[#271b3c] border border-pink-500/20 rounded-xl p-3 text-pink-100 outline-none placeholder-pink-300/25"></textarea>
+            </div>
+            
+            <button type="submit" class="w-full bg-pink-500 text-white font-bold py-3 rounded-xl hover:bg-pink-600 transition-all">
+              In das Glas werfen ✨
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- PHOTO GALLERY (TAB: GALLERY) -->
+      <div id="tab-gallery" class="tab-pane hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold font-serif-elegant text-pink-200">Unsere Erinnerungen</h2>
+            <p class="text-xs text-pink-300/60 font-romantic text-lg">Momente für die Ewigkeit</p>
+          </div>
+          <button onclick="openUploadDialog()" class="h-10 px-4 bg-pink-500 hover:bg-pink-600 text-white rounded-full font-bold text-xs flex items-center space-x-1.5 transition-all">
+            <span>Foto hinzufügen</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3" id="gallery-grid"></div>
+
+        <!-- UPLOAD OVERLAY -->
+        <div id="upload-modal" class="hidden bg-[#1c122b]/95 border border-pink-500/30 p-6 rounded-3xl relative animate-fade-in">
+          <button onclick="closeUploadDialog()" class="absolute top-4 right-4 text-pink-300 hover:text-white">✕</button>
+          <h3 class="text-md font-bold text-pink-200 mb-4">Ein gemeinsames Erlebnis verewigen</h3>
+          
+          <form id="upload-form" class="space-y-4">
+            <div>
+              <label class="block text-xs uppercase tracking-wider text-pink-300/60 mb-1 font-bold">Foto auswählen</label>
+              <input type="file" accept="image/*" id="upload-file" class="w-full text-xs text-pink-300 bg-[#271b3c] p-3 rounded-xl border border-pink-500/20 outline-none">
+              <p id="compress-status" class="text-[10px] text-pink-400 font-semibold mt-1"></p>
+            </div>
+            <div>
+              <label class="block text-xs uppercase tracking-wider text-pink-300/60 mb-1 font-bold">Beschreibung / Text</label>
+              <input type="text" id="upload-desc" placeholder="z.B. Picknick am See..." class="w-full bg-[#271b3c] border border-pink-500/20 rounded-xl p-3 text-pink-100 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs uppercase tracking-wider text-pink-300/60 mb-1 font-bold">Datum</label>
+              <input type="text" id="upload-date" placeholder="z.B. 14. September 2025" class="w-full bg-[#271b3c] border border-pink-500/20 rounded-xl p-3 text-pink-100 outline-none">
+            </div>
+            <button type="submit" class="w-full bg-pink-500 text-white font-bold py-3 rounded-xl hover:bg-pink-600 transition-all">
+              Erinnerung einfügen ✨
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- TIMELINE (TAB: TIMELINE) -->
+      <div id="tab-timeline" class="tab-pane hidden space-y-6">
+        <div class="text-center max-w-sm mx-auto">
+          <h2 class="text-2xl font-bold font-serif-elegant text-pink-200">Unsere Liebesgeschichte</h2>
+          <p class="text-xs text-pink-300/60 mt-1">Die wichtigsten Stationen auf unserem Pfad</p>
+        </div>
+
+        <div class="relative pl-6 border-l-2 border-pink-500/20 space-y-8 ml-3 py-2" id="timeline-container"></div>
+      </div>
+    </main>
+
+    <!-- EXPORT CONTEXT PANEL & CREDIT FOOTER -->
+    <footer class="text-center pt-8 space-y-4">
+      <div class="bg-slate-900/40 border border-pink-500/10 p-4 rounded-2xl text-left">
+        <h4 class="text-xs font-bold text-pink-300 uppercase tracking-widest flex items-center gap-1.5 mb-1">
+          <span>⚙</span> Offline nutzen & abspeichern
+        </h4>
+        <p class="text-[11px] text-pink-100/60 leading-relaxed">
+          Diese Web-App speichert alle Fotos, Zettel und Einträge direkt in deinem Browser. Du kannst diese Seite als vollfunktionale HTML-Datei speichern.
+        </p>
+      </div>
+      <p class="text-xs font-romantic text-pink-300/40">In ewiger Liebe gemacht für Sherin</p>
+    </footer>
+  </div>
+
+  <!-- BOTTOM BAR FOR MOBILE -->
+  <nav id="bottom-nav" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 max-w-sm w-[90%] bg-slate-950/80 backdrop-blur-xl border border-pink-500/25 rounded-2xl px-3 py-2 flex items-center justify-around z-40 shadow-xl shadow-pink-500/5 select-none">
+    <button onclick="gotoTab('home')" id="btn-tab-home" class="flex flex-col items-center p-2 text-pink-300 focus:outline-none transition-all scale-100">
+      <span class="text-lg">🏠</span>
+      <span class="text-[9px] font-bold mt-1">Liebe</span>
+    </button>
+    <button onclick="gotoTab('lovejar')" id="btn-tab-lovejar" class="flex flex-col items-center p-2 text-pink-300/50 focus:outline-none transition-all">
+      <span class="text-lg">🏺</span>
+      <span class="text-[9px] font-bold mt-1">Liebesglas</span>
+    </button>
+    <button onclick="gotoTab('gallery')" id="btn-tab-gallery" class="flex flex-col items-center p-2 text-pink-300/50 focus:outline-none transition-all">
+      <span class="text-lg">🖼</span>
+      <span class="text-[9px] font-bold mt-1">Galerie</span>
+    </button>
+    <button onclick="gotoTab('timeline')" id="btn-tab-timeline" class="flex flex-col items-center p-2 text-pink-300/50 focus:outline-none transition-all">
+      <span class="text-lg">⏳</span>
+      <span class="text-[9px] font-bold mt-1">Geschichte</span>
+    </button>
+  </nav>
+
+  <!-- LIGHTBOX MODAL -->
+  <div id="lightbox" class="hidden fixed inset-0 bg-[#06030a]/95 backdrop-blur-md z-50 flex items-center justify-center p-4" onclick="closeLightbox()">
+    <button class="absolute top-4 right-4 text-pink-300 hover:text-white text-2xl font-bold">✕</button>
+    <div class="max-w-md w-full text-center space-y-4" onclick="event.stopPropagation()">
+      <img id="lightbox-img" class="w-full max-h-[70vh] object-contain rounded-2xl shadow-2xl border border-pink-500/20">
+      <p id="lightbox-desc" class="text-pink-100 text-sm font-semibold"></p>
+      <p id="lightbox-date" class="text-pink-300/60 text-xs font-romantic text-lg"></p>
+    </div>
+  </div>
+
+  <!-- COMPACT AUDIO PLAYER -->
+  <audio id="bg-audio" loop></audio>
+
+  <!-- INTERNAL VANILLA JAVASCRIPT FOR PERFECT OFF-GRID OPERATION -->
+  <script>
+    // Local State
+    let unlocked = false;
+    let selectedTab = 'home';
+    let envelopeOpen = false;
+    let isPlaying = false;
+    
+    // Core loaded structures
+    let gallery = [{"url":"https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600","description":"Händchen halten auf unseren gemeinsamen Wegen","date":"14. September 2025"},{"url":"https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=600","description":"Gemeinsam unter demselben funkelnden Sternenhimmel","date":"Herbstzauber 2025"},{"url":"https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=600","description":"Unsere Herzen im warmen Sonnenuntergangslicht","date":"Ein magischer Moment"},{"url":"https://images.unsplash.com/photo-1490578474895-6acd904d2ef6?q=80&w=600","description":"Die gemütlichsten Stunden voller Lichter und Liebe","date":"Winterkuscheln"}];
+    let notes = [];
+    let timeline = [{"id":1,"date":"August 2025","title":"Club Colors and Candy","desc":"Wo Ich dich Angetanzt habe, wir uns geküsst haben und wo ich mich in dich verliebt habe","icon":"Sparkles","color":"from-pink-500 to-purple-500"},{"id":2,"date":"Anfang September 2025","title":"Das erste Treffen","desc":"Noah, Meesha, du und ich... Wir haben euch mit dem Fahrrad vom Bahnhof abgeholt und sind dann zum Klutensee gelaufen. Am Ende waren wir bei der Burg auf der Bank, während Noah und Meesha nichts gemacht haben. Ich habe dich in den Arm genommen. Ich weiß noch, wie es gerochen hat – die Kombination aus deinem Parfüm „La Rive Vanilla Touch“ und Regen.","icon":"Coffee","color":"from-[#8b5cf6] to-[#ec4899]"},{"id":3,"date":"14. September 2025","title":"Der offizielle Anfang - Unser Jahrestag","desc":"Dort habe ich dich Gefragt ob wir es nochmal versuchen wollen nach dem wir uns in August nicht gesehen haben. Den Tag werde ich nicht vergessen ich war so glücklich auf den Nachhause weg","icon":"Heart","color":"from-rose-500 to-pink-600"},{"id":5,"date":"Heute & Die gemeinsame Zukunft","title":"Unendliche Geschichten","desc":"eder neue Tag bringt neue Abenteuer, leises Lachen und ein tieferes Vertrauen. Auch wenn es Tage gibt, die anstrengend sind für uns beide oder nur für einen von uns, lohnt sich jeder Tag, und ich zweifle nicht eine Sekunde – auch nicht in solchen Momenten.\n\nIch liebe dich über alles Sherin !","icon":"Gift","color":"from-violet-600 to-pink-500"}];
+
+    // Dynamische Liebeswelt-Eigenschaften
+    let partnerNames = `${partnerNames.split(String.fromCharCode(96)).join('\\' + String.fromCharCode(96)).split('$').join('\\$')}`;
+    let subTitle = `${subTitle.split(String.fromCharCode(96)).join('\\' + String.fromCharCode(96)).split('$').join('\\$')}`;
+    let anniversaryDate = `${anniversaryDate.split(String.fromCharCode(96)).join('\\' + String.fromCharCode(96)).split('$').join('\\$')}`;
+    let unlockPassword = `${unlockPassword.split(String.fromCharCode(96)).join('\\' + String.fromCharCode(96)).split('$').join('\\$')}`;
+    let descText1 = `${descText1.split(String.fromCharCode(96)).join('\\' + String.fromCharCode(96)).split('$').join('\\$')}`;
+    let descText2 = `${descText2.split(String.fromCharCode(96)).join('\\' + String.fromCharCode(96)).split('$').join('\\$')}`;
+    let loveLetterText = `${loveLetterText.split(String.fromCharCode(96)).join('\\' + String.fromCharCode(96)).split('$').join('\\$')}`;
+    let disableLimits = false;
+
+    // Tracking limits in LocalStorage
+    let lastReadTS = parseInt(localStorage.getItem('sherin_last_read_ts') || '0', 10);
+    let writtenTS = JSON.parse(localStorage.getItem('sherin_written_ts_v1') || '[]');
+
+    // Music track selection
+    const musicTracks = [{"title":"Musik","artist":"Musik","url":"https://github.com/Witteler-Webdesign/SherinJulian/blob/main/Unchained%20Melody%20(Remastered).mp3"}];
+    let trackIndex = 0;
+
+    // Google style photo collection loading from LocalStorage if customized
+    const storedGallery = localStorage.getItem('sherin_gallery_v1');
+    if (storedGallery) { gallery = JSON.parse(storedGallery); }
+    
+    const storedNotes = localStorage.getItem('sherin_jar_notes_v1');
+    if (storedNotes) { notes = JSON.parse(storedNotes); }
+
+    const storedWrittenTS = localStorage.getItem('sherin_written_ts_v1');
+    if (storedWrittenTS) { writtenTS = JSON.parse(storedWrittenTS); }
+
+    // Init state rendering
+    document.addEventListener('DOMContentLoaded', () => {
+      buildFloatingHearts();
+      initCounter();
+      renderGallery();
+      renderTimeline();
+      
+      // Auto-focus password input
+      document.getElementById('pass-input').focus();
+
+      // Handle Password unlock Submit
+      document.getElementById('unlock-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const pwd = document.getElementById('pass-input').value.trim();
+        const cleanInput = pwd.replace(/./g, '');
+        const cleanUnlock = unlockPassword.replace(/./g, '');
+        if (cleanInput === cleanUnlock || pwd === unlockPassword) {
+          unlockApp();
+        } else {
+          showPasswordError();
+        }
+      });
+
+      // Handle writing note to jar
+      document.getElementById('jar-write-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitWrittenNote();
+      });
+
+      // Handle gallery image compression and base64 parsing
+      document.getElementById('upload-file').addEventListener('change', (e) => {
+        compressImageInput(e);
+      });
+
+      // Handle upload form submit
+      document.getElementById('upload-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitNewImage();
+      });
+    });
+
+    // Ambient floating hearts
+    function buildFloatingHearts() {
+      const container = document.getElementById('hearts-background');
+      container.innerHTML = '';
+      for (let i = 0; i < 15; i++) {
+        createHeart(container, false);
+      }
+      setInterval(() => {
+        if (unlocked) createHeart(container, true);
+      }, 4000);
+    }
+
+    function createHeart(container, animated) {
+      const h = document.createElement('div');
+      h.innerHTML = Math.random() > 0.5 ? '❤️' : '💖';
+      h.className = 'absolute pointer-events-none text-pink-500/25 select-none';
+      const scale = 0.4 + Math.random() * 0.8;
+      const left = Math.random() * 95;
+      const duration = 12 + Math.random() * 10;
+      
+      h.style.left = left + '%';
+      h.style.transform = 'scale(' + scale + ')';
+      h.style.fontSize = (16 * scale) + 'px';
+      
+      if (animated) {
+        h.style.bottom = '-40px';
+        h.style.animation = 'floatUp ' + duration + 's linear forwards';
+        setTimeout(() => h.remove(), duration * 1000);
+      } else {
+        h.style.top = (Math.random() * 90) + 'vh';
+        h.style.animation = 'twinkle 3s ease-in-out infinite';
+      }
+      container.appendChild(h);
+    }
+
+    // Unlock Procedure
+    function unlockApp() {
+      unlocked = true;
+      const wall = document.getElementById('password-wall');
+      wall.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        wall.classList.add('hidden');
+        document.getElementById('main-content').classList.remove('hidden');
+        document.getElementById('bottom-nav').classList.remove('hidden');
+        
+        // Start background music
+        const audio = document.getElementById('bg-audio');
+        if (musicTracks && musicTracks.length > 0) {
+          let u = musicTracks[trackIndex].url;
+          if (u.includes('github.com') && u.includes('/blob/')) {
+            u = u.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+          }
+          audio.src = u;
+          audio.volume = 0.5;
+          audio.play().then(() => {
+            isPlaying = true;
+            document.getElementById('music-indicator').innerText = '⏸';
+          }).catch(() => {
+            console.log('Interaction requirement pending for audio');
+          });
+        }
+      }, 700);
+    }
+
+    function showPasswordError() {
+      const box = document.querySelector('#password-wall > div');
+      box.classList.add('animate-shake', 'border-rose-500/50');
+      document.getElementById('error-msg').classList.remove('hidden');
+      setTimeout(() => {
+        box.classList.remove('animate-shake');
+      }, 500);
+    }
+
+    // Tab Swapping
+    function gotoTab(tabName) {
+      selectedTab = tabName;
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tabName).classList.remove('hidden');
+      
+      // Update Buttons look in Navigation bar
+      document.querySelectorAll('#bottom-nav button').forEach(btn => {
+        btn.classList.add('text-pink-300/50');
+        btn.classList.remove('text-pink-300');
+      });
+      document.getElementById('btn-tab-' + tabName).classList.remove('text-pink-300/50');
+      document.getElementById('btn-tab-' + tabName).classList.add('text-pink-300');
+    }
+
+    // Time relationship elapsed counter based on custom anniversary date
+    function initCounter() {
+      const targetDate = new Date(anniversaryDate + 'T00:00:00').getTime();
+      
+      function run() {
+        const now = Date.now();
+        const diff = now - targetDate;
+        
+        if (diff > 0) {
+          const totalSecs = Math.floor(diff / 1000);
+          const days = Math.floor(totalSecs / (24 * 3600));
+          const hrs = Math.floor((totalSecs % (24 * 3600)) / 3600);
+          const mins = Math.floor((totalSecs % 3600) / 60);
+          const secs = totalSecs % 60;
+          
+          document.getElementById('count-days').innerText = days.toString().padStart(2, '0');
+          document.getElementById('count-hours').innerText = hrs.toString().padStart(2, '0');
+          document.getElementById('count-mins').innerText = mins.toString().padStart(2, '0');
+          document.getElementById('count-secs').innerText = secs.toString().padStart(2, '0');
+        }
+      }
+      run();
+      setInterval(run, 1000);
+    }
+
+    // Music Player controls
+    function playCurrentTrack() {
+      const audio = document.getElementById('bg-audio');
+      if (!musicTracks || musicTracks.length === 0) return;
+      let u = musicTracks[trackIndex].url;
+      if (u.includes('github.com') && u.includes('/blob/')) {
+        u = u.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+      }
+      audio.src = u;
+      audio.play().then(() => {
+        isPlaying = true;
+        document.getElementById('music-indicator').innerText = '⏸';
+      }).catch(err => console.log(err));
+    }
+
+    function toggleMusic() {
+      const audio = document.getElementById('bg-audio');
+      if (!musicTracks || musicTracks.length === 0) return;
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        document.getElementById('music-indicator').innerText = '▶';
+      } else {
+        if (!audio.src) {
+          let u = musicTracks[trackIndex].url;
+          if (u.includes('github.com') && u.includes('/blob/')) {
+            u = u.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+          }
+          audio.src = u;
+        }
+        audio.play().then(() => {
+          isPlaying = true;
+          document.getElementById('music-indicator').innerText = '⏸';
+        }).catch(err => console.log(err));
+      }
+    }
+
+    function prevTrack() {
+      if (!musicTracks || musicTracks.length === 0) return;
+      trackIndex = (trackIndex - 1 + musicTracks.length) % musicTracks.length;
+      playCurrentTrack();
+    }
+
+    function nextTrack() {
+      if (!musicTracks || musicTracks.length === 0) return;
+      trackIndex = (trackIndex + 1) % musicTracks.length;
+      playCurrentTrack();
+    }
+
+    // Liebesbrief animation handler
+    function toggleEnvelope() {
+      envelopeOpen = !envelopeOpen;
+      const content = document.getElementById('envelope-content');
+      if (envelopeOpen) {
+        content.classList.remove('hidden');
+      } else {
+        content.classList.add('hidden');
+      }
+    }
+
+    // Quotes Generator
+    const quotesList = ["Ich habe dich geliebt seit der ersten Sekunde, und ich werde dich lieben bis zur letzten.","Du bist der Grund, warum ich am Morgen lächle und mich am Abend auf den nächsten Tag freue.","Positiv denken !","Ich würde bezahlen um den Abend im Club zu wiederholen"];
+    let quoteIndex = 0;
+    function nextQuote() {
+      quoteIndex = (quoteIndex + 1) % quotesList.length;
+      document.getElementById('quote-text').innerText = quotesList[quoteIndex];
+    }
+
+    // Liebesglas Logic
+    function canOpenNoteNow() {
+      if (disableLimits) return true;
+      if (lastReadTS === 0) return true;
+      const last = new Date(lastReadTS);
+      const now = new Date();
+      return !(
+        last.getFullYear() === now.getFullYear() &&
+        last.getMonth() === now.getMonth() &&
+        last.getDate() === now.getDate()
+      );
+    }
+
+    function getRestCountdownText() {
+      const next = new Date(lastReadTS);
+      next.setDate(next.getDate() + 1);
+      next.setHours(0, 0, 0, 0);
+      const diff = next.getTime() - Date.now();
+      if (diff <= 0) return "Jetzt";
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      return h + ' Std. ' + m + ' Min.';
+    }
+
+    function readRandomNote() {
+      closeJarDialogs();
+      if (!disableLimits && !canOpenNoteNow()) {
+        alert("Süße Liebste, du hast heute schon einen Zettel gelesen! Gönne dir bis zur nächsten Botschaft noch etwas Vorfreude. Ein neuer Zettel ist in " + getRestCountdownText() + " verfügbar! ❤️");
+        return;
+      }
+      if (notes.length === 0) {
+        alert("Oh! Das Glas ist leer. Bitte schreibe erst eine liebe Botschaft für das Liebesglas.");
+        return;
+      }
+      const luckyIdx = Math.floor(Math.random() * notes.length);
+      const selected = notes[luckyIdx];
+      
+      document.getElementById('note-text-display').innerText = selected.content;
+      document.getElementById('note-author-display').innerText = selected.author ? "— Verfasst von " + selected.author + " ❤️" : "";
+      document.getElementById('read-note-modal').classList.remove('hidden');
+      
+      if (!disableLimits) {
+        lastReadTS = Date.now();
+        localStorage.setItem('sherin_last_read_ts', lastReadTS);
+      }
+    }
+
+    // Open write note modal limit checker
+    function getTodayWritesCount() {
+      const lastDay = Date.now() - (24 * 3600000);
+      return writtenTS.filter(ts => ts > lastDay).length;
+    }
+
+    function openWriteModal() {
+      closeJarDialogs();
+      const left = disableLimits ? 999 : (2 - getTodayWritesCount());
+      document.getElementById('write-limit-info').innerText = disableLimits 
+        ? "Keine Limits aktiv! Du kannst beliebig viele Zettel schreiben."
+        : "Du kannst heute noch " + (left < 0 ? 0 : left) + " Zettel schreiben. (Max. 2 pro 24 Std.)";
+      document.getElementById('write-note-modal').classList.remove('hidden');
+    }
+
+    function submitWrittenNote() {
+      const cat = document.getElementById('write-category').value;
+      const txt = document.getElementById('write-content').value.trim();
+      const authorName = document.getElementById('write-author').value.trim();
+      
+      if (!txt) {
+        alert("Bitte gib eine Liebesbotschaft ein.");
+        return;
+      }
+
+      if (!authorName) {
+        alert("Bitte gib an, wer diesen Zettel schreibt!");
+        return;
+      }
+
+      if (!disableLimits && getTodayWritesCount() >= 2) {
+        alert("Schreibe-Limit von 2 Zetteln pro Tag erreicht! Versuche es morgen wieder, um das Liebesglas weiter zu füllen! 🤫");
+        return;
+      }
+
+      const fresh = { type: cat, content: txt, author: authorName };
+      notes.push(fresh);
+      writtenTS.push(Date.now());
+      
+      localStorage.setItem('sherin_jar_notes_v1', JSON.stringify(notes));
+      localStorage.setItem('sherin_written_ts_v1', JSON.stringify(writtenTS));
+      
+      document.getElementById('write-content').value = '';
+      
+      const badge = document.getElementById('jar-count-badge');
+      if (badge) {
+        badge.innerText = notes.length + " Zettel im Glas 🌟";
+      }
+
+      alert("Erfolgreich! Deine Nachricht wurde dem Liebesglas hinzugefügt. 💌✨");
+      closeJarDialogs();
+    }
+
+    function closeJarDialogs() {
+      document.getElementById('read-note-modal').classList.add('hidden');
+      document.getElementById('write-note-modal').classList.add('hidden');
+    }
+
+    // Gallery Render & Logic
+    function renderGallery() {
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = '';
+      gallery.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'group relative aspect-square bg-[#190e2d]/60 backdrop-blur rounded-2xl overflow-hidden border border-pink-500/10 cursor-pointer shadow-lg hover:border-pink-500/40 transition-all';
+        itemDiv.setAttribute('onclick', 'openLightbox(' + index + ')');
+        
+        itemDiv.innerHTML = `
+          <img src="${item.url}" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-3 flex flex-col justify-end opacity-90 group-hover:opacity-100 transition-all">
+            <p class="text-[10px] text-pink-300/90 font-semibold">${item.date}</p>
+            <p class="text-xs text-white font-medium truncate">${item.description}</p>
+          </div>
+          <button onclick="deleteGalleryItem(${index}, event)" class="absolute top-2 right-2 bg-black/60 text-pink-300 hover:text-rose-400 h-6 w-6 rounded-full flex items-center justify-center text-xs backdrop-blur border border-pink-500/10 z-20">✕</button>
+        `;
+        grid.appendChild(itemDiv);
+      });
+    }
+
+    let loadedBase64 = null;
+    function compressImageInput(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      document.getElementById('compress-status').innerText = "Wird verarbeitet...";
+      
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let w = img.width;
+          let h = img.height;
+          const maxWidth = 800;
+          
+          if (w > h) {
+            if (w > maxWidth) { h *= maxWidth / w; w = maxWidth; }
+          } else {
+            if (h > maxWidth) { w *= maxWidth / h; h = maxWidth; }
+          }
+          
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          loadedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          document.getElementById('compress-status').innerText = "Foto geladen! ✨";
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function submitNewImage() {
+      const desc = document.getElementById('upload-desc').value.trim();
+      const customDate = document.getElementById('upload-date').value.trim() || new Date().toLocaleDateString('de-DE');
+      
+      if (!loadedBase64) {
+        alert("Bitte wähle zuerst ein Foto aus.");
+        return;
+      }
+      
+      const newPic = {
+        url: loadedBase64,
+        description: desc || "Glücklicher Liebesmoment",
+        date: customDate
+      };
+      
+      gallery.unshift(newPic);
+      localStorage.setItem('sherin_gallery_v1', JSON.stringify(gallery));
+      
+      // Reset inputs
+      document.getElementById('upload-desc').value = '';
+      document.getElementById('upload-date').value = '';
+      document.getElementById('upload-file').value = '';
+      loadedBase64 = null;
+      document.getElementById('compress-status').innerText = '';
+      
+      renderGallery();
+      closeUploadDialog();
+    }
+
+    function openUploadDialog() {
+      document.getElementById('upload-modal').classList.remove('hidden');
+    }
+    function closeUploadDialog() {
+      document.getElementById('upload-modal').classList.add('hidden');
+    }
+
+    function deleteGalleryItem(idx, e) {
+      e.stopPropagation();
+      if (confirm("Möchtest du dieses Bild aus der Galerie löschen?")) {
+        gallery.splice(idx, 1);
+        localStorage.setItem('sherin_gallery_v1', JSON.stringify(gallery));
+        renderGallery();
+      }
+    }
+
+    // Lightbox Controls
+    function openLightbox(idx) {
+      const pic = gallery[idx];
+      document.getElementById('lightbox-img').src = pic.url;
+      document.getElementById('lightbox-desc').innerText = pic.description;
+      document.getElementById('lightbox-date').innerText = pic.date;
+      document.getElementById('lightbox').classList.remove('hidden');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.add('hidden');
+    }
+
+    // Timeline Builder
+    function renderTimeline() {
+      const container = document.getElementById('timeline-container');
+      container.innerHTML = '';
+      timeline.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'relative pl-8';
+        
+        // Determinen icon
+        let bulletIcon = '❤️';
+        if (item.icon === 'Coffee') bulletIcon = '☕';
+        if (item.icon === 'Sparkles') bulletIcon = '✨';
+        if (item.icon === 'Flame') bulletIcon = '🔥';
+        if (item.icon === 'Gift') bulletIcon = '🎁';
+
+        itemDiv.innerHTML = `
+          <!-- Bulb element -->
+          <div class="absolute -left-[18px] top-1.5 h-8 w-8 bg-slate-900 border-2 border-pink-500 rounded-full flex items-center justify-center text-sm shadow-md animate-pulse">
+            ${bulletIcon}
+          </div>
+          <div class="bg-slate-900/40 backdrop-blur border border-pink-500/10 p-5 rounded-2xl hover:border-pink-500/25 transition-all">
+            <span class="inline-block text-[10px] uppercase tracking-wider text-pink-400 font-bold mb-1 bg-pink-500/10 px-2 py-0.5 rounded-full">
+              ${item.date}
+            </span>
+            <h4 class="text-md font-bold text-pink-200 font-serif-elegant mb-1">${item.title}</h4>
+            <p class="text-xs text-pink-100/70 leading-relaxed">${item.desc}</p>
+          </div>
+        `;
+        container.appendChild(itemDiv);
+      });
+    }
+  </script>
+</body>
+</html>
